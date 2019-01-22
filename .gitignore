@@ -30,3 +30,12 @@
 !.vscode/extensions.json
 config.codekit3
 prepros-6.config
+
+resources/downloads/batch/*
+resources/downloads/inventory/*
+resources/downloads/sales-tax/*
+resources/downloads/cusomter/*
+!resources/downloads/batch/.gitkeep
+!resources/downloads/inventory/.gitkeep
+!resources/downloads/sales-tax/.gitkeep
+!resources/downloads/cusomter/.gitkeep
