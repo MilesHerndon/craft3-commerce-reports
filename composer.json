@@ -1,0 +1,43 @@
+{
+    "name": "milesherndon/commerce-reports",
+    "description": "Plugin to run specific Commerce reports",
+    "type": "craft-plugin",
+    "version": "1.0.0",
+    "keywords": [
+        "craft",
+        "cms",
+        "craftcms",
+        "craft-plugin",
+        "commerce reports"
+    ],
+    "support": {
+        "docs": "???",
+        "issues": "???"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "MilesHerndon",
+            "homepage": "https://milesherndon.com"
+        }
+    ],
+    "require": {
+        "craftcms/cms": "^3.0.0-RC1"
+    },
+    "autoload": {
+        "psr-4": {
+          "milesherndon\\commercereports\\": "src/"
+        }
+    },
+    "extra": {
+        "name": "Commerce Reports",
+        "handle": "commerce-reports",
+        "hasCpSettings": false,
+        "hasCpSection": false,
+        "changelogUrl": "???",
+        "components": {
+            "commerceReportsService": "milesherndon\\commercereports\\services\\CommerceReportsService"
+        },
+        "class": "milesherndon\\commercereports\\CommerceReports"
+    }
+}

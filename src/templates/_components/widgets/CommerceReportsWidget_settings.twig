@@ -1,0 +1,60 @@
+{# @var craft \craft\web\twig\variables\CraftVariable #}
+{#
+/**
+ * Commerce Reports plugin for Craft CMS
+ *
+ * CommerceReportsWidget Widget Settings
+ *
+ * @author    MilesHerndon
+ * @copyright Copyright (c) 2019 MilesHerndon
+ * @link      https://milesherndon.com
+ * @package   CommerceReports
+ * @since     1.0.0
+ */
+#}
+
+{% import "_includes/forms" as forms %}
+
+{% do view.registerAssetBundle("milesherndon\\commercereports\\assetbundles\\commercereportswidgetwidget\\CommerceReportsWidgetWidgetAsset") %}
+
+<ul>
+  <li><b>Batch Transactions:</b> Choose a date range. Report to be imported into FundWare. Exports zip file of txts and csv.</li>
+  <li><b>Customer Order History:</b> Choose a customer and a date range. Exports csv file of orders.</li>
+  <li><b>Indiana Sales Tax:</b> Choose a date range. Exports csv file of orders with sales tax.</li>
+  <li><b>Inventory Sold:</b> Choose a date range. Exports csv file of amount sold and inventory in date range.</li>
+  <li><b>Full Inventory:</b> Exports csv file of total inventory.</li>
+</ul>
+
+{{ forms.selectField({
+        label: 'Select a Report Type'|t,
+        id: 'reportType',
+        name: 'reportType',
+        value: widget['reportType'],
+        options: reportTypes
+    })
+}}
+
+{{ forms.selectField({
+        label: 'Select a Customer'|t,
+        id: 'customer',
+        name: 'customer',
+        options: customers,
+        value: widget['customer'],
+    })
+}}
+
+{{ forms.dateField({
+        label: 'Start Date'|t,
+        instructions: 'The batch closes at 10pm the day before your selection.'|t,
+        id: 'startDate',
+        name: 'startDate',
+    })
+}}
+
+{{ forms.dateField({
+        label: 'End Date'|t,
+        instructions: 'The batch closes at 10pm the day of your selection.'|t,
+        id: 'endDate',
+        name: 'endDate',
+    })
+}}
