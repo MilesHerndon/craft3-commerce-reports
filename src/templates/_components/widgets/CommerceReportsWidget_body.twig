@@ -19,8 +19,6 @@
 
 {# <img src="{{ iconUrl }}" height="64" width="64" /> #}
 
-<h3>{{ settings.reportType|replace('-',' ')|ucwords }}</b> Report</h3>
-
 {% if settings.reportType == 'customer-order-history' %}
     <p>
         Customer: <strong>{{settings.customer|replace('\\@','@')}}</strong>
@@ -75,5 +73,3 @@
     </div>
 
 </form>
-
-{# <a class="btn submit" href="/admin/action/commerce-reports/default/{{settings.reportType}}?startDate={{settings.startDate.date}}&endDate={{settings.endDate.date}}">Generate Reports</a> #}

@@ -27,12 +27,39 @@ use craft\helpers\UrlHelper;
  */
 class CommerceReportsService extends Component
 {
-    private $pathBase;
+    // Private Properties
+    // =========================================================================
 
-    public function __construct() {
-        $this->pathBase = Craft::$app->path->getVendorPath() . '/milesherndon/commercereports/resources/downloads';
-        $this->pathBase = '/Users/tokersey/Sites/milesherndon-plugins/commercereports/resources/downloads';
-    }
+    private $accountCodes = [
+        'pay' => [
+            'desc'=>'PAY',
+            'acct#'=>'01-00-00-1007-000'
+        ],
+        'ar/pp' => [
+            'desc'=>'AR, PP',
+            'acct#'=>'01-00-00-1054-000'
+        ],
+        'inventory' => [
+            'desc'=>'INV',
+            'acct#'=>'01-00-00-1073-000'
+        ],
+        'shipping' => [
+            'desc'=>'Freight_#, Handling_#',
+            'acct#'=>'01-02-00-8220-000'
+        ],
+        'product' => [
+            'desc'=>'TR',
+            'acct#'=>'01-02-00-4135-000'
+        ],
+        'tax' => [
+            'desc'=>'TAX/IN',
+            'acct#'=>'01-02-00-8026-000'
+        ],
+        'cogs' => [
+            'desc'=>'COGS',
+            'acct#'=>'01-02-00-8240-000'
+        ],
+    ];
 
     // Public Methods
     // =========================================================================
@@ -57,8 +84,7 @@ class CommerceReportsService extends Component
         $dateCounter = $startDateInSeconds;
 
         $files = [];
-        $tempPath = Craft::$app->path->getTempPath() . '/commerce-reports-batch/';
-        FileHelper::clearDirectory($tempPath);
+        $tempPath = $this->_getStoragePath('commerce-reports-batch');
 
         $orderSpreadsheet = $this->_getOrdersWithDetails($request, $tempPath);
         array_push($files, $orderSpreadsheet);
@@ -129,14 +155,14 @@ class CommerceReportsService extends Component
             $fileContentsString .= '1|CRAFT|'.$datesReport['end'].'|CRAFT|CRAFT IMPORT'."|\r\n";
 
             foreach ($initialTemplateArray as $key => $value) {
-                $fileContentsString .= '4|'.$this->_accountCodes[$key]['acct#'].'|'.$this->_accountCodes[$key]['desc'].'||CRAFT||'.(string)$value."|\r\n";
+                $fileContentsString .= '4|'.$this->accountCodes[$key]['acct#'].'|'.$this->accountCodes[$key]['desc'].'||CRAFT||'.(string)$value."|\r\n";
 
                 fputcsv($fp, [
                     '',
-                    $this->_accountCodes[$key]['acct#'],
+                    $this->accountCodes[$key]['acct#'],
                     $datesName['start'], $value > 0 ? 'D' : 'C',
                     'Craft Journal',
-                    $this->_accountCodes[$key]['desc'],
+                    $this->accountCodes[$key]['desc'],
                     (string)abs($value)
                 ]);
 
@@ -173,10 +199,9 @@ class CommerceReportsService extends Component
         $startDateString = $startDate->format('Ymd');
 
         $nameTemplate = $startDateString . '_' . $endDateString;
-        $filePath = $this->pathBase . '/sales-tax/';
-        FileHelper::clearDirectory($filePath);
+        $filePath = $this->_getStoragePath('commerce-reports-sales-tax');
         $csvFileName = 'sales-tax_' . $nameTemplate.'.csv';
-        $fileName = $filePath . $csvFileName;
+        $fileName = $filePath . '/' . $csvFileName;
 
         $fp = fopen($fileName, 'w');
 
@@ -220,9 +245,9 @@ class CommerceReportsService extends Component
         }
 
         $nameTemplate = $customerEmail;
-        $filePath = $this->pathBase . '/customer/';
+        $filePath = $this->_getStoragePath('commerce-reports-customer');
         $csvFileName = 'customer_'.$nameTemplate.'.csv';
-        $fileName = $filePath.$csvFileName;
+        $fileName = $filePath . '/' . $csvFileName;
 
         $fp = fopen($fileName, 'w');
 
@@ -238,7 +263,7 @@ class CommerceReportsService extends Component
             $address = $order->shippingAddress;
             $row = [
                 'Order #' => (string)$order->shortNumber,
-                'Date Ordered' => $order->dateOrdered,
+                'Date Ordered' => $order->dateOrdered->format('Y-m-d'),
                 'Customer' => $address->firstName . ' ' . $address->lastName,
                 'Purchase Total' => $order->itemSubtotal,
                 'Status' => $order->status,
@@ -263,12 +288,10 @@ class CommerceReportsService extends Component
             $orders = $this->_getOrdersByDate($request);
         }
 
-        $tempPath = $this->pathBase . '/inventory/';
+        $tempPath = $this->_getStoragePath('commerce-reports-inventory');
         $fileName = 'inventory_'.time().'.csv';
 
-        FileHelper::clearDirectory($tempPath);
-
-        $name = $tempPath.$fileName;
+        $name = $tempPath . '/' . $fileName;
         $fp = fopen($name, 'w');
 
         if ($sold) {
@@ -369,7 +392,7 @@ class CommerceReportsService extends Component
         $filePaths = array();
         foreach ($combinedOrders as $dateKey => $valueArray) {
 
-            $fileName = Craft::$app->path->getTempPath() . '/' . $dateKey.'.csv';
+            $fileName = $this->_getStoragePath('commerce-reports-orders') . '/' . $dateKey.'.csv';
 
             $fp = fopen($fileName, 'w');
 
@@ -405,10 +428,10 @@ class CommerceReportsService extends Component
 
         $zipNameTemplate = $startDateString.'_'.$endDateString;
 
-        $zipPath = $this->pathBase . '/batch/';
+        $zipPath = $this->_getStoragePath('commerce-reports-batch');
 
         $zipFileName = 'batch-transactions_'.$zipNameTemplate.'.zip';
-        $zipName = $zipPath . $zipFileName;
+        $zipName = $zipPath . '/' . $zipFileName;
 
         if (file_exists($zipName)) {
             FileHelper::unlink($zipName);
@@ -458,37 +481,6 @@ class CommerceReportsService extends Component
             ->all();
     }
 
-    private $_accountCodes = [
-        'pay' => [
-            'desc'=>'PAY',
-            'acct#'=>'01-00-00-1007-000'
-        ],
-        'ar/pp' => [
-            'desc'=>'AR, PP',
-            'acct#'=>'01-00-00-1054-000'
-        ],
-        'inventory' => [
-            'desc'=>'INV',
-            'acct#'=>'01-00-00-1073-000'
-        ],
-        'shipping' => [
-            'desc'=>'Freight_#, Handling_#',
-            'acct#'=>'01-02-00-8220-000'
-        ],
-        'product' => [
-            'desc'=>'TR',
-            'acct#'=>'01-02-00-4135-000'
-        ],
-        'tax' => [
-            'desc'=>'TAX/IN',
-            'acct#'=>'01-02-00-8026-000'
-        ],
-        'cogs' => [
-            'desc'=>'COGS',
-            'acct#'=>'01-02-00-8240-000'
-        ],
-    ];
-
     // // NOTE: Part of batchTransations
     private function _getOrdersWithDetails($request, $filepath)
     {
@@ -533,5 +525,15 @@ class CommerceReportsService extends Component
 
         return $fileName;
 
+    }
+
+    public function _getStoragePath($subfolder) {
+        $path = Craft::$app->path->getTempPath() . '/' . $subfolder;
+
+        if (!file_exists($path)) {
+            FileHelper::createDirectory($path);
+        }
+
+        return $path;
     }
 }

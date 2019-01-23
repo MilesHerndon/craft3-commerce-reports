@@ -11,7 +11,12 @@
 namespace milesherndon\commercereports;
 
 use milesherndon\commercereports\services\CommerceReportsService as CommerceReportsServiceService;
-use milesherndon\commercereports\widgets\CommerceReportsWidget;
+// use milesherndon\commercereports\widgets\CommerceReportsWidget;
+use milesherndon\commercereports\widgets\BatchTransactionsWidget;
+use milesherndon\commercereports\widgets\CustomerOrderHistoryWidget;
+use milesherndon\commercereports\widgets\FullInventoryWidget;
+use milesherndon\commercereports\widgets\InventorySoldWidget;
+use milesherndon\commercereports\widgets\SalesTaxWidget;
 
 use Craft;
 use craft\base\Plugin;
@@ -86,7 +91,12 @@ class CommerceReports extends Plugin
             Dashboard::class,
             Dashboard::EVENT_REGISTER_WIDGET_TYPES,
             function (RegisterComponentTypesEvent $event) {
-                $event->types[] = CommerceReportsWidget::class;
+                // $event->types[] = CommerceReportsWidget::class;
+                $event->types[] = BatchTransactionsWidget::class;
+                $event->types[] = CustomerOrderHistoryWidget::class;
+                $event->types[] = FullInventoryWidget::class;
+                $event->types[] = InventorySoldWidget::class;
+                $event->types[] = SalesTaxWidget::class;
             }
         );
 

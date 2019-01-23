@@ -17,23 +17,34 @@
 
 {% do view.registerAssetBundle("milesherndon\\commercereports\\assetbundles\\commercereportswidgetwidget\\CommerceReportsWidgetWidgetAsset") %}
 
-<ul>
-  <li><strong>Batch Transactions:</strong> Choose a date range. Report to be imported into FundWare. Exports zip file of txts and csv.</li>
-  <li><strong>Customer Order History:</strong> Choose a customer and a date range. Exports csv file of orders.</li>
-  <li><strong>Indiana Sales Tax:</strong> Choose a date range. Exports csv file of orders with sales tax.</li>
-  <li><strong>Inventory Sold:</strong> Choose a date range. Exports csv file of amount sold and inventory in date range.</li>
-  <li><strong>Full Inventory:</strong> Exports csv file of total inventory.</li>
-</ul>
+{% switch reportType %}
+    {% case "batch-transactions" %}
+        <p>Report to be imported into FundWare. Exports zip file of txts and csv.</p>
 
-{{ forms.selectField({
-        label: 'Select a Report Type'|t,
+    {% case "customer-order-history" %}
+        <p>Exports csv file of orders for a selected customer.</p>
+
+    {% case "full-inventory" %}
+        <p>Exports csv file of total inventory.</p>
+
+    {% case "inventory-sold" %}
+        <p>Exports csv file of amount sold and inventory in date range.</p>
+
+    {% case "indiana-sales-tax" %}
+        <p>Exports csv file of orders with sales tax.</p>
+
+    {% default %}
+
+{% endswitch %}
+
+{{ forms.hidden({
         id: 'reportType',
         name: 'reportType',
-        value: widget['reportType'],
-        options: reportTypes
+        value: reportType
     })
 }}
 
+{% if reportType == 'customer-order-history' %}
 {{ forms.selectField({
         label: 'Select a Customer'|t,
         id: 'customer',
@@ -42,7 +53,9 @@
         value: widget['customer'],
     })
 }}
+{% endif %}
 
+{% if reportType != 'full-inventory' %}
 {{ forms.dateField({
         label: 'Start Date'|t,
         instructions: 'The batch closes at 10pm the day before your selection.'|t,
@@ -58,3 +71,4 @@
         name: 'endDate',
     })
 }}
+{% endif %}
