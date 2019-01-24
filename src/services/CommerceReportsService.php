@@ -105,7 +105,7 @@ class CommerceReportsService extends Component
             $datesReport = $this->_formatTimes($params, 'mdY');
             // CommerceAddonsPlugin::log(print_r($dates, true));
 
-            $fileName = $tempPath . '/' . $datesName['start'];
+            $fileName = $tempPath . '/' . date('Y-m-d', strtotime("+1 day", strtotime($datesName['start'])));
             array_push($files, $fileName.'.txt');
 
             $orders = Order::find()
@@ -134,15 +134,13 @@ class CommerceReportsService extends Component
             $initialTemplateArray = array_fill_keys($keys, 0);
 
             foreach ($orders as $order) {
-                if (!empty($order)) {
-                    $initialTemplateArray['shipping'] += floatval($order->getAdjustmentsTotalByType("shipping")) * -1;
-                    // $initialTemplateArray['ar/pp'] += floatval($order->totalPaid);
-                    $initialTemplateArray['inventory'] += floatval($this->_totalProductWholesale($order->getLineItems())) * -1;
-                    $initialTemplateArray['product'] += floatval($order->itemTotal - $order->getAdjustmentsTotalByType("tax")) * -1;
-                    $initialTemplateArray['cogs'] += floatval($this->_totalProductWholesale($order->getLineItems()));
-                    $initialTemplateArray['pay'] += floatval($order->itemTotal + $order->getAdjustmentsTotalByType("shipping"));
-                    $initialTemplateArray['tax'] += floatval($order->getAdjustmentsTotalByType("tax")) * -1;
-                }
+                $initialTemplateArray['shipping'] += floatval($order->getAdjustmentsTotalByType("shipping")) * -1;
+                // $initialTemplateArray['ar/pp'] += floatval($order->totalPaid);
+                $initialTemplateArray['inventory'] += floatval($this->_totalProductWholesale($order->getLineItems())) * -1;
+                $initialTemplateArray['product'] += floatval($order->itemTotal - $order->getAdjustmentsTotalByType("tax")) * -1;
+                $initialTemplateArray['cogs'] += floatval($this->_totalProductWholesale($order->getLineItems()));
+                $initialTemplateArray['pay'] += floatval($order->itemTotal + $order->getAdjustmentsTotalByType("shipping"));
+                $initialTemplateArray['tax'] += floatval($order->getAdjustmentsTotalByType("tax")) * -1;
             }
 
             $initialTemplateArray = array_map(
@@ -366,7 +364,7 @@ class CommerceReportsService extends Component
         // This modification is -2 hours to get to 10pm the previous day, then +4 hours to make up for timezone, because timezone is not working somehow...
         // $startDate -> modify('-2 hours');
         if ($timezoneAdjusted) {
-          $startDate->modify('+2 hours');
+          $startDate->modify('-2 hours');
         }
 
         $endDate = new \DateTime($rawEndDate);
@@ -374,7 +372,7 @@ class CommerceReportsService extends Component
         // This modification is +22 hours to get to 10pm the same day, then +4 hours to make up for timezone, because timezone is not working somehow...
         // $endDate -> modify('+22 hours');
         if ($timezoneAdjusted) {
-          $endDate->modify('+26 hours');
+          $endDate->modify('+20 hours');
         }
       }
 
