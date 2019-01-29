@@ -11,8 +11,8 @@
         "commerce reports"
     ],
     "support": {
-        "docs": "???",
-        "issues": "???"
+        "docs": "https://github.com/MilesHerndon/craft3-commerce-ups-shipping",
+        "issues": "https://github.com/MilesHerndon/craft3-commerce-ups-shipping"
     },
     "license": "MIT",
     "authors": [
@@ -22,7 +22,7 @@
         }
     ],
     "require": {
-        "craftcms/cms": "^3.0.0-RC1"
+        "craftcms/cms": "^3.1"
     },
     "autoload": {
         "psr-4": {
@@ -34,7 +34,7 @@
         "handle": "commerce-reports",
         "hasCpSettings": false,
         "hasCpSection": false,
-        "changelogUrl": "???",
+        "changelogUrl": "https://github.com/MilesHerndon/craft3-commerce-ups-shipping",
         "components": {
             "commerceReportsService": "milesherndon\\commercereports\\services\\CommerceReportsService"
         },
