@@ -2,7 +2,7 @@
     "name": "milesherndon/commerce-reports",
     "description": "Plugin to run specific Commerce reports",
     "type": "craft-plugin",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "keywords": [
         "craft",
         "cms",
