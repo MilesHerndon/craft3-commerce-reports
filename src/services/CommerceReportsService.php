@@ -299,45 +299,48 @@ class CommerceReportsService extends Component
         }
 
         foreach ($variants as $variant) {
-            $product = $variant->getProduct();
-            $wholesale = $product->getType()->handle != 'uniqueImagesForEachVariant' ? $product->productWholesalePrice : $variant->productWholesalePrice;
-            $wholesale = empty($wholesale) ? 0 : $wholesale;
 
-            if ($sold) {
-                $quantitySold = 0;
+            if ($variant->getProduct() is defined) {
+                $product = $variant->getProduct();
+                $wholesale = $product->getType()->handle != 'uniqueImagesForEachVariant' ? $product->productWholesalePrice : $variant->productWholesalePrice;
+                $wholesale = empty($wholesale) ? 0 : $wholesale;
 
-                foreach ($orders as $order) {
-                    $lineItems = $order->getLineItems();
+                if ($sold) {
+                    $quantitySold = 0;
 
-                    foreach ($lineItems as $lineItem) {
-                        $lineItemVariant = $lineItem->purchasable;
-                        if ($lineItem->getSku() == $variant->getSku()) {
-                            $qty = $lineItem->qty;
-                            $quantitySold += $qty;
+                    foreach ($orders as $order) {
+                        $lineItems = $order->getLineItems();
+
+                        foreach ($lineItems as $lineItem) {
+                            $lineItemVariant = $lineItem->purchasable;
+                            if ($lineItem->getSku() == $variant->getSku()) {
+                                $qty = $lineItem->qty;
+                                $quantitySold += $qty;
+                            }
                         }
                     }
                 }
-            }
 
-            $row = [
-                'sku' => $variant->getSku(),
-                'title' => $product->title,
-                'price' => number_format((float)$variant->getPrice(), 2, '.', ''),
-                'wholesale' => number_format((float)$wholesale, 2, '.', ''),
-                'quantity' => $variant->stock,
-            ];
+                $row = [
+                    'sku' => $variant->getSku(),
+                    'title' => $product->title,
+                    'price' => number_format((float)$variant->getPrice(), 2, '.', ''),
+                    'wholesale' => number_format((float)$wholesale, 2, '.', ''),
+                    'quantity' => $variant->stock,
+                ];
 
-            // NOTE: add quantity sold from orders for sold
-            if ($sold) {
-                $row['sold'] = $quantitySold;
-            }
-            // NOTE: add weight for total
-            else{
-                $weight = array('weight'=>$variant->weight);
-                array_splice( $row, 4, 0, $weight );
-            }
+                // NOTE: add quantity sold from orders for sold
+                if ($sold) {
+                    $row['sold'] = $quantitySold;
+                }
+                // NOTE: add weight for total
+                else{
+                    $weight = array('weight'=>$variant->weight);
+                    array_splice( $row, 4, 0, $weight );
+                }
 
-            fputcsv($fp, $row);
+                fputcsv($fp, $row);
+            }
         }
         fclose($fp);
 
