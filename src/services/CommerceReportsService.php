@@ -300,7 +300,7 @@ class CommerceReportsService extends Component
 
         foreach ($variants as $variant) {
 
-            if ($variant->getProduct() is defined) {
+            try {
                 $product = $variant->getProduct();
                 $wholesale = $product->getType()->handle != 'uniqueImagesForEachVariant' ? $product->productWholesalePrice : $variant->productWholesalePrice;
                 $wholesale = empty($wholesale) ? 0 : $wholesale;
@@ -340,6 +340,8 @@ class CommerceReportsService extends Component
                 }
 
                 fputcsv($fp, $row);
+            } catch(\Exception $e) {
+
             }
         }
         fclose($fp);
