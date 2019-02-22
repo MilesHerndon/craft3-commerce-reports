@@ -463,9 +463,16 @@ class CommerceReportsService extends Component
             $qty = $lineItem->qty;
             $productId = $lineItem->snapshot['product']['id'];
 
-            $product = Product::find()->id($productId)->one();
+            $product = Product::find()->id($productId)->status(null)->one();
+
+            if (!is_numeric($product['productWholesalePrice'])) {
+                $productId = $lineItem->snapshot['purchasableId'];
+                $product = Variant::find()->id($productId)->one();
+            }
+
             $totalWholesale += ($product['productWholesalePrice'] * $qty);
         }
+
         return $totalWholesale;
     }
 
