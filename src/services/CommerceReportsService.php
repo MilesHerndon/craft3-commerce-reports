@@ -369,7 +369,7 @@ class CommerceReportsService extends Component
         // This modification is -2 hours to get to 10pm the previous day, then +4 hours to make up for timezone, because timezone is not working somehow...
         // $startDate -> modify('-2 hours');
         if ($timezoneAdjusted) {
-          $startDate->modify('-2 hours');
+          $startDate->modify('+2 hours');
         }
 
         $endDate = new \DateTime($rawEndDate);
@@ -377,7 +377,7 @@ class CommerceReportsService extends Component
         // This modification is +22 hours to get to 10pm the same day, then +4 hours to make up for timezone, because timezone is not working somehow...
         // $endDate -> modify('+22 hours');
         if ($timezoneAdjusted) {
-          $endDate->modify('+20 hours');
+          $endDate->modify('+26 hours');
         }
       }
 
