@@ -2,11 +2,9 @@
 
 Plugin to run specific Commerce reports
 
-![Screenshot](resources/img/plugin-logo.png)
-
 ## Requirements
 
-This plugin requires Craft CMS 3.0.0-beta.23 or later.
+This plugin requires Craft CMS 3.1 or later and Commerce 2.0 or later.
 
 ## Installation
 
@@ -18,21 +16,23 @@ To install the plugin, follow these instructions.
 
 2. Then tell Composer to load the plugin:
 
-        composer require /commerce-reports
+        composer require milesherndon/commerce-reports
 
 3. In the Control Panel, go to Settings → Plugins and click the “Install” button for Commerce Reports.
 
 ## Commerce Reports Overview
 
--Insert text here-
+Commerce reports creates widgets that run reports to gather specific data. The following reports widgets are included:
 
-## Configuring Commerce Reports
-
--Insert text here-
+- Batch Transactions (Specific for ZTA's needs)
+- Customer Order History
+- Full Inventory
+- Inventory Sold
+- Sales Tax
 
 ## Using Commerce Reports
 
--Insert text here-
+Add widget to the dashboard and fill in the required data to run the report.
 
 ## Commerce Reports Roadmap
 
