@@ -84,7 +84,7 @@ class CommerceReportsService extends Component
         $dateCounter = $startDateInSeconds;
 
         $files = [];
-        $tempPath = $this->_getStoragePath('commerce-reports-batch');
+        $tempPath = ReportFileHelper::getStoragePath('commerce-reports-batch');
 
         $orderSpreadsheet = $this->_getOrdersWithDetails($request, $tempPath);
         array_push($files, $orderSpreadsheet);
@@ -197,7 +197,7 @@ class CommerceReportsService extends Component
         $startDateString = $startDate->format('Ymd');
 
         $nameTemplate = $startDateString . '_' . $endDateString;
-        $filePath = $this->_getStoragePath('commerce-reports-sales-tax');
+        $filePath = ReportFileHelper::getStoragePath('commerce-reports-sales-tax');
         $csvFileName = 'sales-tax_' . $nameTemplate.'.csv';
         $fileName = $filePath . '/' . $csvFileName;
 
@@ -243,7 +243,7 @@ class CommerceReportsService extends Component
         }
 
         $nameTemplate = $customerEmail;
-        $filePath = $this->_getStoragePath('commerce-reports-customer');
+        $filePath = ReportFileHelper::getStoragePath('commerce-reports-customer');
         $csvFileName = 'customer_'.$nameTemplate.'.csv';
         $fileName = $filePath . '/' . $csvFileName;
 
@@ -286,7 +286,7 @@ class CommerceReportsService extends Component
             $orders = $this->_getOrdersByDate($request);
         }
 
-        $tempPath = $this->_getStoragePath('commerce-reports-inventory');
+        $tempPath = ReportFileHelper::getStoragePath('commerce-reports-inventory');
         $fileName = 'inventory_'.time().'.csv';
 
         $name = $tempPath . '/' . $fileName;
@@ -395,7 +395,7 @@ class CommerceReportsService extends Component
         $filePaths = array();
         foreach ($combinedOrders as $dateKey => $valueArray) {
 
-            $fileName = $this->_getStoragePath('commerce-reports-orders') . '/' . $dateKey.'.csv';
+            $fileName = ReportFileHelper::getStoragePath('commerce-reports-orders') . '/' . $dateKey.'.csv';
 
             $fp = fopen($fileName, 'w');
 
@@ -431,7 +431,7 @@ class CommerceReportsService extends Component
 
         $zipNameTemplate = $startDateString.'_'.$endDateString;
 
-        $zipPath = $this->_getStoragePath('commerce-reports-batch');
+        $zipPath = ReportFileHelper::getStoragePath('commerce-reports-batch');
 
         $zipFileName = 'batch-transactions_'.$zipNameTemplate.'.zip';
         $zipName = $zipPath . '/' . $zipFileName;
@@ -534,16 +534,5 @@ class CommerceReportsService extends Component
         fclose($fp);
 
         return $fileName;
-
-    }
-
-    public function _getStoragePath($subfolder) {
-        $path = Craft::$app->path->getTempPath() . '/' . $subfolder;
-
-        if (!file_exists($path)) {
-            FileHelper::createDirectory($path);
-        }
-
-        return $path;
     }
 }

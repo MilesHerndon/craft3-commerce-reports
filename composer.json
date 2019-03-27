@@ -35,9 +35,10 @@
         "handle": "commerce-reports",
         "hasCpSettings": false,
         "hasCpSection": false,
-        "changelogUrl": "https://github.com/MilesHerndon/craft3-commerce-ups-shipping",
+        "changelogUrl": "https://github.com/MilesHerndon/craft3-commerce-reports",
         "components": {
-            "commerceReportsService": "milesherndon\\commercereports\\services\\CommerceReportsService"
+            "commerceReportsService": "milesherndon\\commercereports\\services\\CommerceReportsService",
+            "inventoryService": "milesherndon\\commercereports\\services\\InventoryService"
         },
         "class": "milesherndon\\commercereports\\CommerceReports"
     }

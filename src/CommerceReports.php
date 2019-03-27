@@ -15,6 +15,7 @@ use milesherndon\commercereports\services\CommerceReportsService as CommerceRepo
 use milesherndon\commercereports\widgets\BatchTransactionsWidget;
 use milesherndon\commercereports\widgets\CustomerOrderHistoryWidget;
 use milesherndon\commercereports\widgets\FullInventoryWidget;
+use milesherndon\commercereports\widgets\InventoryQuantityModificationWidget;
 use milesherndon\commercereports\widgets\InventorySoldWidget;
 use milesherndon\commercereports\widgets\SalesTaxWidget;
 
@@ -79,10 +80,11 @@ class CommerceReports extends Plugin
             UrlManager::class,
             UrlManager::EVENT_REGISTER_CP_URL_RULES,
             function (RegisterUrlRulesEvent $event) {
-                $event->rules['inventorySold'] = 'commerce-reports/default/inventory-sold';
-                $event->rules['fullInventory'] = 'commerce-reports/default/full-inventory';
-                $event->rules['customerOrderHistory'] = 'commerce-reports/default/customer-order-history';
                 $event->rules['batchTransactions'] = 'commerce-reports/default/batch-transactions';
+                $event->rules['customerOrderHistory'] = 'commerce-reports/default/customer-order-history';
+                $event->rules['fullInventory'] = 'commerce-reports/default/full-inventory';
+                $event->rules['inventoryQuantityModifications'] = 'commerce-reports/default/inventory-quantity-modifications';
+                $event->rules['inventorySold'] = 'commerce-reports/default/inventory-sold';
                 $event->rules['salesTax'] = 'commerce-reports/default/indiana-sales-tax';
             }
         );
@@ -95,6 +97,7 @@ class CommerceReports extends Plugin
                 $event->types[] = BatchTransactionsWidget::class;
                 $event->types[] = CustomerOrderHistoryWidget::class;
                 $event->types[] = FullInventoryWidget::class;
+                $event->types[] = InventoryQuantityModificationWidget::class;
                 $event->types[] = InventorySoldWidget::class;
                 $event->types[] = SalesTaxWidget::class;
             }

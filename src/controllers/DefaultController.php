@@ -36,6 +36,7 @@ class DefaultController extends Controller
     protected $allowAnonymous = [
         'inventory-sold',
         'full-inventory',
+        'inventory-quantity-modifications',
         'customer-order-history',
         'batch-transactions',
         'indiana-sales-tax',
@@ -55,27 +56,27 @@ class DefaultController extends Controller
     {
         $request = Craft::$app->getRequest()->get();
 
-        $products = CommerceReports::getInstance()->commerceReportsService->getInventory($request, true);
+        $results = CommerceReports::getInstance()->commerceReportsService->getInventory($request, true);
 
-        return Craft::$app->getResponse()->sendFile($products);
+        return Craft::$app->getResponse()->sendFile($results);
     }
 
     public function actionFullInventory()
     {
         $request = Craft::$app->getRequest()->get();
 
-        $products = CommerceReports::getInstance()->commerceReportsService->getInventory($request, false);
+        $results = CommerceReports::getInstance()->commerceReportsService->getInventory($request, false);
 
-        return Craft::$app->getResponse()->sendFile($products);
+        return Craft::$app->getResponse()->sendFile($results);
     }
 
     public function actionCustomerOrderHistory()
     {
         $request = Craft::$app->getRequest()->get();
 
-        $orders = CommerceReports::getInstance()->commerceReportsService->getOrdersByCustomer($request);
+        $results = CommerceReports::getInstance()->commerceReportsService->getOrdersByCustomer($request);
 
-        return Craft::$app->getResponse()->sendFile($orders);
+        return Craft::$app->getResponse()->sendFile($results);
     }
 
     public function actionBatchTransactions()
@@ -83,19 +84,28 @@ class DefaultController extends Controller
         // get data from dashboard request
         $request = Craft::$app->getRequest()->get();
 
-        $batch = CommerceReports::getInstance()->commerceReportsService->batchTransactions($request);
+        $results = CommerceReports::getInstance()->commerceReportsService->batchTransactions($request);
 
         // CommerceAddonsPlugin::log(print_r('actionBatchTransactions', true));
 
-        return Craft::$app->getResponse()->sendFile($batch);
+        return Craft::$app->getResponse()->sendFile($results);
     }
 
     public function actionIndianaSalesTax()
     {
         $request = Craft::$app->getRequest()->get();
 
-        $orders = CommerceReports::getInstance()->commerceReportsService->getIndianaSalesTax($request);
+        $results = CommerceReports::getInstance()->commerceReportsService->getIndianaSalesTax($request);
 
-        return Craft::$app->getResponse()->sendFile($orders);
+        return Craft::$app->getResponse()->sendFile($results);
+    }
+
+    public function actionInventoryQuantityModifications()
+    {
+        $request = Craft::$app->getRequest()->get();
+
+        $results = CommerceReports::getInstance()->inventoryService->getInventoryQuantityModifications($request);
+
+        return Craft::$app->getResponse()->sendFile($results);
     }
 }
