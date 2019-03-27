@@ -137,8 +137,8 @@ class CommerceReportsWidget extends Widget
                 'label' => 'Indiana Sales Tax',
             ],
             [
-                'value' => 'inventory-quantity-modifications',
-                'label' => 'Inventory Quantity Modifications',
+                'value' => 'inventory-quantity-adjustments',
+                'label' => 'Inventory Quantity Adjustments',
             ],
             [
                 'value' => 'inventory-sold',

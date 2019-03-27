@@ -19,13 +19,13 @@ use craft\elements\db\ElementQuery;
 use craft\commerce\elements\Order;
 
 /**
- * Inventory Quantity Modifications Widget
+ * Inventory Quantity Adjustments Widget
  *
  * @author    MilesHerndon
  * @package   CommerceReports
  * @since     1.0.0
  */
-class InventoryQuantityModificationWidget extends Widget
+class InventoryQuantityAdjustmentsWidget extends Widget
 {
 
     // Public Properties
@@ -47,7 +47,7 @@ class InventoryQuantityModificationWidget extends Widget
      */
     public static function displayName(): string
     {
-        return Craft::t('commerce-reports', 'Commerce Reports - Inventory Quantity Modifications');
+        return Craft::t('commerce-reports', 'Commerce Reports - Inventory Quantity Adjustments');
     }
 
     /**
@@ -79,7 +79,7 @@ class InventoryQuantityModificationWidget extends Widget
             $rules,
             [
                 ['reportType', 'string'],
-                ['reportType', 'default', 'value' => 'inventory-quantity-modifications']
+                ['reportType', 'default', 'value' => 'inventory-quantity-adjustments']
             ]
         );
         return $rules;
@@ -95,7 +95,7 @@ class InventoryQuantityModificationWidget extends Widget
             [
                 'widget' => $this,
                 'settings' => $this->settings,
-                'reportType' => 'inventory-quantity-modifications'
+                'reportType' => 'inventory-quantity-adjustments'
             ]
         );
     }
