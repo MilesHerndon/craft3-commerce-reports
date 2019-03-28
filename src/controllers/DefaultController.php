@@ -33,14 +33,7 @@ class DefaultController extends Controller
      *         The actions must be in 'kebab-case'
      * @access protected
      */
-    protected $allowAnonymous = [
-        'inventory-sold',
-        'full-inventory',
-        'inventory-quantity-modifications',
-        'customer-order-history',
-        'batch-transactions',
-        'indiana-sales-tax',
-    ];
+    protected $allowAnonymous = false;
 
     // Public Methods
     // =========================================================================
@@ -100,11 +93,11 @@ class DefaultController extends Controller
         return Craft::$app->getResponse()->sendFile($results);
     }
 
-    public function actionInventoryQuantityModifications()
+    public function actionInventoryQuantityAdjustments()
     {
         $request = Craft::$app->getRequest()->get();
 
-        $results = CommerceReports::getInstance()->inventoryService->getInventoryQuantityModifications($request);
+        $results = CommerceReports::getInstance()->inventoryService->getInventoryQuantityAdjustments($request);
 
         return Craft::$app->getResponse()->sendFile($results);
     }

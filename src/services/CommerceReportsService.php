@@ -11,6 +11,7 @@
 namespace milesherndon\commercereports\services;
 
 use milesherndon\commercereports\CommerceReports;
+use milesherndon\commercereports\helpers\ReportFileHelper;
 
 use Craft;
 use craft\base\Component;
@@ -349,7 +350,7 @@ class CommerceReportsService extends Component
         return $name;
     }
 
-    private function _formatTimes($request, $format, $timezoneAdjusted = false)
+    public function _formatTimes($request, $format, $timezoneAdjusted = false)
     {
       $rawStartDate = $request[0]['value'] ?? $request['startDate'];
       $rawEndDate = $request[1]['value'] ?? $request['endDate'];

@@ -11,22 +11,25 @@
 namespace milesherndon\commercereports;
 
 use milesherndon\commercereports\services\CommerceReportsService as CommerceReportsServiceService;
-// use milesherndon\commercereports\widgets\CommerceReportsWidget;
 use milesherndon\commercereports\widgets\BatchTransactionsWidget;
 use milesherndon\commercereports\widgets\CustomerOrderHistoryWidget;
 use milesherndon\commercereports\widgets\FullInventoryWidget;
-use milesherndon\commercereports\widgets\InventoryQuantityModificationWidget;
+use milesherndon\commercereports\widgets\InventoryQuantityAdjustmentsWidget;
 use milesherndon\commercereports\widgets\InventorySoldWidget;
 use milesherndon\commercereports\widgets\SalesTaxWidget;
 
 use Craft;
 use craft\base\Plugin;
-use craft\services\Plugins;
+use craft\commerce\elements\Variant;
+use craft\commerce\elements\Product;
+use craft\commerce\events\CustomizeProductSnapshotFieldsEvent;
 use craft\events\PluginEvent;
-use craft\web\UrlManager;
-use craft\services\Dashboard;
 use craft\events\RegisterComponentTypesEvent;
 use craft\events\RegisterUrlRulesEvent;
+use craft\services\Dashboard;
+use craft\services\Plugins;
+use craft\services\Elements;
+use craft\web\UrlManager;
 
 use yii\base\Event;
 
@@ -83,7 +86,7 @@ class CommerceReports extends Plugin
                 $event->rules['batchTransactions'] = 'commerce-reports/default/batch-transactions';
                 $event->rules['customerOrderHistory'] = 'commerce-reports/default/customer-order-history';
                 $event->rules['fullInventory'] = 'commerce-reports/default/full-inventory';
-                $event->rules['inventoryQuantityModifications'] = 'commerce-reports/default/inventory-quantity-modifications';
+                $event->rules['inventoryQuantityAdjustments'] = 'commerce-reports/default/inventory-quantity-adjustments';
                 $event->rules['inventorySold'] = 'commerce-reports/default/inventory-sold';
                 $event->rules['salesTax'] = 'commerce-reports/default/indiana-sales-tax';
             }
@@ -93,13 +96,14 @@ class CommerceReports extends Plugin
             Dashboard::class,
             Dashboard::EVENT_REGISTER_WIDGET_TYPES,
             function (RegisterComponentTypesEvent $event) {
-                // $event->types[] = CommerceReportsWidget::class;
-                $event->types[] = BatchTransactionsWidget::class;
-                $event->types[] = CustomerOrderHistoryWidget::class;
-                $event->types[] = FullInventoryWidget::class;
-                $event->types[] = InventoryQuantityModificationWidget::class;
-                $event->types[] = InventorySoldWidget::class;
-                $event->types[] = SalesTaxWidget::class;
+                $event->types = [
+                    BatchTransactionsWidget::class,
+                    CustomerOrderHistoryWidget::class,
+                    FullInventoryWidget::class,
+                    InventoryQuantityAdjustmentsWidget::class,
+                    InventorySoldWidget::class,
+                    SalesTaxWidget::class,
+                ];
             }
         );
 
@@ -109,6 +113,30 @@ class CommerceReports extends Plugin
             function (PluginEvent $event) {
                 if ($event->plugin === $this) {
                 }
+            }
+        );
+
+        Event::on(
+            Elements::class,
+            Elements::EVENT_BEFORE_SAVE_ELEMENT,
+            function(Event $event) {
+                $this->inventoryService->setCurrentQuantities($event->element);
+            }
+        );
+
+        Event::on(
+            Elements::class,
+            Elements::EVENT_AFTER_SAVE_ELEMENT,
+            function(Event $event) {
+                $this->inventoryService->saveQuantityAdjustments($event->element);
+            }
+        );
+
+        Event::on(
+            Elements::class,
+            Elements::EVENT_BEFORE_DELETE_ELEMENT,
+            function(Event $event) {
+                $this->inventoryService->saveQuantityAdjustments($event->element, true);
             }
         );
 
