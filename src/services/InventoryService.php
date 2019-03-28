@@ -68,7 +68,7 @@ class InventoryService extends Component
             $row = [
                 'SKU' => $record->sku,
                 'Title' => $record->title,
-                'Price' => 0,
+                'Price' => $record->price,
                 'Wholesale' => $record->wholesale,
                 'Qty Added' => $record->qtyAdded,
                 'Qty Removed' => $record->qtyDeleted,
@@ -119,9 +119,11 @@ class InventoryService extends Component
             if ($currentQuantity !== $element->stock) {
                 $record->title = (!is_null($element->title) ? $element->title : $element->getProduct()->title);
                 $record->productId = $element->productId;
+                $record->variantId = $element->id;
                 $record->sku = $element->sku;
                 $record->stockRemaining = $element->stock;
                 $record->wholesale = $element->getProduct()->productWholesalePrice ?? 0;
+                $record->price = $element->price;
 
                 if ($currentQuantity < $element->stock) {
                     $record->qtyAdded = $element->stock - $currentQuantity;

@@ -75,8 +75,10 @@ class Install extends Migration
                 [
                     'id' => $this->primaryKey(),
                     'productId' => $this->integer(),
+                    'variantId' => $this->integer(),
                     'sku' => $this->string(),
                     'title' => $this->string(),
+                    'price' => $this->float(2)->notNull()->defaultValue(0),
                     'wholesale' => $this->float(2)->notNull()->defaultValue(0),
                     'qtyAdded' => $this->integer()->notNull()->defaultValue(0),
                     'qtyDeleted' => $this->integer()->notNull()->defaultValue(0),
