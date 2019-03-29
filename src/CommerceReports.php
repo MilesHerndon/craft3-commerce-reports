@@ -73,14 +73,6 @@ class CommerceReports extends Plugin
 
         Event::on(
             UrlManager::class,
-            UrlManager::EVENT_REGISTER_SITE_URL_RULES,
-            function (RegisterUrlRulesEvent $event) {
-                $event->rules['siteActionTrigger1'] = 'commerce-reports/default';
-            }
-        );
-
-        Event::on(
-            UrlManager::class,
             UrlManager::EVENT_REGISTER_CP_URL_RULES,
             function (RegisterUrlRulesEvent $event) {
                 $event->rules['batchTransactions'] = 'commerce-reports/default/batch-transactions';
@@ -96,14 +88,7 @@ class CommerceReports extends Plugin
             Dashboard::class,
             Dashboard::EVENT_REGISTER_WIDGET_TYPES,
             function (RegisterComponentTypesEvent $event) {
-                $event->types = [
-                    BatchTransactionsWidget::class,
-                    CustomerOrderHistoryWidget::class,
-                    FullInventoryWidget::class,
-                    InventoryQuantityAdjustmentsWidget::class,
-                    InventorySoldWidget::class,
-                    SalesTaxWidget::class,
-                ];
+                $event->types = $this->_getWidgetTypes($event->types);
             }
         );
 
@@ -153,4 +138,14 @@ class CommerceReports extends Plugin
     // Protected Methods
     // =========================================================================
 
+    private function _getWidgetTypes($eventTypes) {
+        return array_merge($eventTypes, [
+            BatchTransactionsWidget::class,
+            CustomerOrderHistoryWidget::class,
+            FullInventoryWidget::class,
+            InventoryQuantityAdjustmentsWidget::class,
+            InventorySoldWidget::class,
+            SalesTaxWidget::class,
+        ]);
+    }
 }
