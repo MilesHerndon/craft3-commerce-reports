@@ -19,7 +19,7 @@ use craft\helpers\FileHelper;
 /**
  * @author    MilesHerndon
  * @package   CommerceReports
- * @since     1.0.5
+ * @since     1.1.0
  */
 class ReportFileHelper extends FileHelper
 {

@@ -22,7 +22,7 @@ use craft\commerce\elements\Product;
 /**
  * @author    MilesHerndon
  * @package   CommerceReports
- * @since     1.0.5
+ * @since     1.1.0
  */
 class TaxService extends Component
 {

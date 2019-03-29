@@ -18,7 +18,7 @@ use craft\helpers\DateTimeHelper;
 /**
  * @author    MilesHerndon
  * @package   CommerceReports
- * @since     1.0.5
+ * @since     1.1.0
  */
 class ReportDateTimeHelper extends DateTimeHelper
 {

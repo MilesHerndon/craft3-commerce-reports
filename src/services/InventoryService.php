@@ -23,7 +23,7 @@ use craft\commerce\elements\Variant;
 /**
  * @author    MilesHerndon
  * @package   CommerceReports
- * @since     1.0.5
+ * @since     1.1.0
  */
 class InventoryService extends Component
 {
@@ -42,7 +42,7 @@ class InventoryService extends Component
      * Returns a list of changed inventory quantities
      *
      * @param $request
-     * @return $csv
+     * @return string
      */
     public function getInventoryQuantityAdjustments($request)
     {
