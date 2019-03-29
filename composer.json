@@ -1,6 +1,6 @@
 {
     "name": "milesherndon/commerce-reports",
-    "description": "Plugin to run specific Commerce reports",
+    "description": "Plugin to create specific Commerce reports (client: ZTA)",
     "type": "craft-plugin",
     "version": "1.0.4",
     "keywords": [
@@ -35,9 +35,12 @@
         "handle": "commerce-reports",
         "hasCpSettings": false,
         "hasCpSection": false,
-        "changelogUrl": "https://github.com/MilesHerndon/craft3-commerce-ups-shipping",
+        "changelogUrl": "https://github.com/MilesHerndon/craft3-commerce-reports",
         "components": {
-            "commerceReportsService": "milesherndon\\commercereports\\services\\CommerceReportsService"
+            "batchTransactionService": "milesherndon\\commercereports\\services\\BatchTransactionService",
+            "orderService": "milesherndon\\commercereports\\services\\OrderService",
+            "taxService": "milesherndon\\commercereports\\services\\TaxService",
+            "inventoryService": "milesherndon\\commercereports\\services\\InventoryService"
         },
         "class": "milesherndon\\commercereports\\CommerceReports"
     }
