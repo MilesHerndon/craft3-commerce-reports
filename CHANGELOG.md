@@ -37,3 +37,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Removed
 - Remove CommerceReportsService
+
+## 1.1.1 - 2019-03-29
+### Fixed
+- Fixed issue with Craft default widgets missing.
