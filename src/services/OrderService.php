@@ -30,6 +30,12 @@ class OrderService extends Component
     // Public Methods
     // =========================================================================
 
+    /**
+     * Get orders by customer
+     *
+     * @param $request
+     * @return string
+     */
     public function getOrdersByCustomer($request)
     {
         $customerEmailPreformatted = $request['customer'];
@@ -77,6 +83,12 @@ class OrderService extends Component
         return $fileName;
     }
 
+    /**
+     * Gets orders between a specified date
+     *
+     * @param $request
+     * @return craft\commerce\elements\Order
+     */
     public function getOrdersByDate($request)
     {
         if (empty($request)) {

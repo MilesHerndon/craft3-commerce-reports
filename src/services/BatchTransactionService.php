@@ -66,7 +66,7 @@ class BatchTransactionService extends Component
      * Create batch transaction zip file.
      *
      * @param $request
-     * @return filepath
+     * @return string
      */
     public function batchTransactions($request)
     {

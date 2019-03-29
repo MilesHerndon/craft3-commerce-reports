@@ -74,7 +74,6 @@ class DefaultController extends Controller
 
     public function actionBatchTransactions()
     {
-        // get data from dashboard request
         $request = Craft::$app->getRequest()->get();
 
         $results = CommerceReports::getInstance()->batchTransactionService->batchTransactions($request);

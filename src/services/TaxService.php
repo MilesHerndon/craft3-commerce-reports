@@ -29,6 +29,12 @@ class TaxService extends Component
     // Public Methods
     // =========================================================================
 
+    /**
+     * Gets indiana sales tax items
+     *
+     * @param $request
+     * @return string
+     */
     public function getIndianaSalestax($request)
     {
         // $dates = ReportDateTimeHelper::formatTimes($request, 'Y-m-d H:i');

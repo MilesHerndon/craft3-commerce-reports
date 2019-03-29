@@ -109,6 +109,7 @@ class InventoryService extends Component
      * Save version product quantity adjustments
      *
      * @param $element
+     * @param $elementDeleted
      * @return boolean
      */
     public function saveQuantityAdjustments($element, $elementDeleted = false)
@@ -241,6 +242,12 @@ class InventoryService extends Component
         return $name;
     }
 
+    /**
+     * Get wholesale price of line item.
+     *
+     * @param $lineItems
+     * @return float
+     */
     public function totalProductWholesale($lineItems)
     {
         $totalWholesale = 0;
