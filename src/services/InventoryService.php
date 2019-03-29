@@ -12,12 +12,13 @@ namespace milesherndon\commercereports\services;
 
 use milesherndon\commercereports\CommerceReports;
 use milesherndon\commercereports\helpers\ReportFileHelper;
+use milesherndon\commercereports\helpers\ReportDateTimeHelper;
 use milesherndon\commercereports\records\AdjustmentRecord;
 
 use Craft;
 use craft\base\Component;
-use craft\commerce\elements\Variant;
 use craft\commerce\elements\Product;
+use craft\commerce\elements\Variant;
 
 /**
  * @author    MilesHerndon
@@ -55,7 +56,7 @@ class InventoryService extends Component
             return false;
         }
 
-        $dates = CommerceReports::$plugin->commerceReportsService->_formatTimes($request, 'c', true);
+        $dates = ReportDateTimeHelper::formatTimes($request, 'c', true);
 
         $adjustmentRecords = AdjustmentRecord::find()
                                 ->where(['>=', 'dateCreated', $dates['start']])
@@ -158,5 +159,105 @@ class InventoryService extends Component
                 return true;
             }
         }
+    }
+
+    /**
+     * Get inventory items for Sold and Total reports
+     *
+     * @param $request
+     * @param $sold
+     * @return $csv
+     */
+    public function getInventory($request, $sold = true)
+    {
+        $variants = Variant::find()
+            ->orderBy('sku asc')
+            ->all();
+
+        if ($sold) {
+            $orders = CommerceReports::$plugin->orderService->getOrdersByDate($request);
+        }
+
+        $tempPath = ReportFileHelper::getStoragePath('commerce-reports-inventory');
+        $fileName = 'inventory_'.time().'.csv';
+
+        $name = $tempPath . '/' . $fileName;
+        $fp = fopen($name, 'w');
+
+        if ($sold) {
+            fputcsv($fp, array('SKU','Title','Price','Wholesale','On hand/stock','Qty sold'));
+        } else {
+            fputcsv($fp, array('SKU','Title','Price','Wholesale','Weight','On hand/stock'));
+        }
+
+        foreach ($variants as $variant) {
+
+            try {
+                $product = $variant->getProduct();
+                $wholesale = $product->getType()->handle != 'uniqueImagesForEachVariant' ? $product->productWholesalePrice : $variant->productWholesalePrice;
+                $wholesale = empty($wholesale) ? 0 : $wholesale;
+
+                if ($sold) {
+                    $quantitySold = 0;
+
+                    foreach ($orders as $order) {
+                        $lineItems = $order->getLineItems();
+
+                        foreach ($lineItems as $lineItem) {
+                            $lineItemVariant = $lineItem->purchasable;
+                            if ($lineItem->getSku() == $variant->getSku()) {
+                                $qty = $lineItem->qty;
+                                $quantitySold += $qty;
+                            }
+                        }
+                    }
+                }
+
+                $row = [
+                    'sku' => $variant->getSku(),
+                    'title' => $product->title,
+                    'price' => number_format((float)$variant->getPrice(), 2, '.', ''),
+                    'wholesale' => number_format((float)$wholesale, 2, '.', ''),
+                    'quantity' => $variant->stock,
+                ];
+
+                // NOTE: add quantity sold from orders for sold
+                if ($sold) {
+                    $row['sold'] = $quantitySold;
+                }
+                // NOTE: add weight for total
+                else{
+                    $weight = array('weight'=>$variant->weight);
+                    array_splice( $row, 4, 0, $weight );
+                }
+
+                fputcsv($fp, $row);
+            } catch(\Exception $e) {
+
+            }
+        }
+        fclose($fp);
+
+        return $name;
+    }
+
+    public function totalProductWholesale($lineItems)
+    {
+        $totalWholesale = 0;
+        foreach ($lineItems as $lineItem) {
+            $qty = $lineItem->qty;
+            $productId = $lineItem->snapshot['product']['id'];
+
+            $product = Product::find()->id($productId)->status(null)->one();
+
+            if (!is_numeric($product['productWholesalePrice'])) {
+                $productId = $lineItem->snapshot['purchasableId'];
+                $product = Variant::find()->id($productId)->one();
+            }
+
+            $totalWholesale += ($product['productWholesalePrice'] * $qty);
+        }
+
+        return $totalWholesale;
     }
 }

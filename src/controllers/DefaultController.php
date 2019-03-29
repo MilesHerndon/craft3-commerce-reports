@@ -49,7 +49,7 @@ class DefaultController extends Controller
     {
         $request = Craft::$app->getRequest()->get();
 
-        $results = CommerceReports::getInstance()->commerceReportsService->getInventory($request, true);
+        $results = CommerceReports::getInstance()->inventoryService->getInventory($request, true);
 
         return Craft::$app->getResponse()->sendFile($results);
     }
@@ -58,7 +58,7 @@ class DefaultController extends Controller
     {
         $request = Craft::$app->getRequest()->get();
 
-        $results = CommerceReports::getInstance()->commerceReportsService->getInventory($request, false);
+        $results = CommerceReports::getInstance()->inventoryService->getInventory($request, false);
 
         return Craft::$app->getResponse()->sendFile($results);
     }
@@ -67,7 +67,7 @@ class DefaultController extends Controller
     {
         $request = Craft::$app->getRequest()->get();
 
-        $results = CommerceReports::getInstance()->commerceReportsService->getOrdersByCustomer($request);
+        $results = CommerceReports::getInstance()->orderService->getOrdersByCustomer($request);
 
         return Craft::$app->getResponse()->sendFile($results);
     }
@@ -77,7 +77,7 @@ class DefaultController extends Controller
         // get data from dashboard request
         $request = Craft::$app->getRequest()->get();
 
-        $results = CommerceReports::getInstance()->commerceReportsService->batchTransactions($request);
+        $results = CommerceReports::getInstance()->batchTransactionService->batchTransactions($request);
 
         // CommerceAddonsPlugin::log(print_r('actionBatchTransactions', true));
 
@@ -88,7 +88,7 @@ class DefaultController extends Controller
     {
         $request = Craft::$app->getRequest()->get();
 
-        $results = CommerceReports::getInstance()->commerceReportsService->getIndianaSalesTax($request);
+        $results = CommerceReports::getInstance()->taxService->getIndianaSalesTax($request);
 
         return Craft::$app->getResponse()->sendFile($results);
     }
