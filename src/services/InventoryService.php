@@ -188,7 +188,7 @@ class InventoryService extends Component
         $fp = fopen($name, 'w');
 
         if ($sold) {
-            fputcsv($fp, array('SKU','Title','Price','Wholesale','On hand/stock','Qty sold'));
+            fputcsv($fp, array('SKU','Title','Price','Wholesale','On hand/stock','Qty sold', 'Profit'));
         } else {
             fputcsv($fp, array('SKU','Title','Price','Wholesale','Weight','On hand/stock'));
         }
@@ -227,7 +227,9 @@ class InventoryService extends Component
                 // NOTE: add quantity sold from orders for sold
                 if ($sold) {
                     $row['sold'] = $quantitySold;
+                    $row['profit'] = ($row['price'] - $row['wholesale']) * $row['sold'];
                 }
+
                 // NOTE: add weight for total
                 else{
                     $weight = array('weight'=>$variant->weight);
