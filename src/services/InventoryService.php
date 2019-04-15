@@ -97,7 +97,9 @@ class InventoryService extends Component
             foreach ($element->getVariants() as $variant) {
                 if ($variant->id) {
                     $existingVariant = Variant::findOne($variant->id);
-                    $this->currentQuantities[$variant->sku] = $existingVariant->stock;
+                    if (isset($existingVariant->stock)) {
+                        $this->currentQuantities[$variant->sku] = $existingVariant->stock;
+                    }
                 }
             }
         }
