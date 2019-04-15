@@ -59,6 +59,12 @@ class BatchTransactionService extends Component
         ],
     ];
 
+    private $dates;
+
+    private $datesName;
+
+    private $datesReport;
+
     // Public Methods
     // =========================================================================
 
@@ -84,7 +90,6 @@ class BatchTransactionService extends Component
         array_push($files, $orderSpreadsheet);
 
         for ($dateCounter = $startDateInSeconds; $dateCounter < $endDateInSeconds; $dateCounter += $incrementer) {
-
             $params = [
                 0 => [
                     'value' => $dateCounter
@@ -94,40 +99,73 @@ class BatchTransactionService extends Component
                 ]
             ];
 
-            $dates = ReportDateTimeHelper::formatTimes($params, 'Y-m-d H:i');
-            $datesName = ReportDateTimeHelper::formatTimes($params, 'Y-m-d');
-            $datesReport = ReportDateTimeHelper::formatTimes($params, 'mdY');
-            // CommerceAddonsPlugin::log(print_r($dates, true));
+            $this->dates = ReportDateTimeHelper::formatTimes($params, 'Y-m-d H:i');
+            $this->datesName = ReportDateTimeHelper::formatTimes($params, 'Y-m-d');
+            $this->datesReport = ReportDateTimeHelper::formatTimes($params, 'mdY');
 
-            $fileName = $tempPath . '/' . date('Y-m-d', strtotime("+1 day", strtotime($datesName['start'])));
-            array_push($files, $fileName.'.txt');
+            $fileName = $tempPath . '/' . date('Y-m-d', strtotime("+1 day", strtotime($this->datesName['start'])));
 
             $orders = Order::find()
                 ->isCompleted(true)
                 ->orderBy('dateOrdered asc')
-                ->dateOrdered(["and", ">= ".$dates['start'], "< ".$dates['end']])
+                ->dateOrdered(["and", ">= ".$this->dates['start'], "< ".$this->dates['end']])
                 ->all();
 
-            // NOTE: CSV
-            $csvFileName = $fileName.'.csv';
+            $files = $this->createDailyOrderFiles($orders, $files, $fileName);
 
-            $fp = fopen($csvFileName, 'w');
+            $refundedOrders = Order::find()
+                ->isCompleted(true)
+                ->orderBy('dateOrdered asc')
+                ->orderStatus('refunded')
+                ->dateOrdered(["and", ">= ".$this->dates['start'], "< ".$this->dates['end']])
+                ->all();
 
-            fputcsv($fp, [
-                'Batch Number',
-                'Account Number',
-                'Post Date',
-                'Type',
-                'Journal',
-                'Journal Reference',
-                'Amount'
-            ]);
+            if (!empty($refundedOrders)) {
+                $files = $this->createDailyOrderFiles($refundedOrders, $files, $fileName, 1);
+            }
+        }
 
-            // $keys = array('shipping', 'ar/pp', 'inventory', 'product', 'cogs', 'pay', 'tax');
-            $keys = array('shipping', 'inventory', 'product', 'cogs', 'pay', 'tax');
-            $initialTemplateArray = array_fill_keys($keys, 0);
+        $zip = ReportFileHelper::generateZip($files, $request);
 
-            foreach ($orders as $order) {
+        return $zip;
+    }
+
+    public function createDailyOrderFiles($orders, $files, $fileName, $refunds=0)
+    {
+        if ($refunds) {
+            $fileName = $fileName.'-refunds';
+        }
+
+        array_push($files, $fileName.'.txt');
+
+        // NOTE: CSV
+        $csvFileName = $fileName.'.csv';
+
+        $fp = fopen($csvFileName, 'w');
+
+        fputcsv($fp, [
+            'Batch Number',
+            'Account Number',
+            'Post Date',
+            'Type',
+            'Journal',
+            'Journal Reference',
+            'Amount'
+        ]);
+
+        // $keys = array('shipping', 'ar/pp', 'inventory', 'product', 'cogs', 'pay', 'tax');
+        $keys = array('shipping', 'inventory', 'product', 'cogs', 'pay', 'tax');
+        $initialTemplateArray = array_fill_keys($keys, 0);
+
+        foreach ($orders as $order) {
+            if ($refunds) {
+                $initialTemplateArray['shipping'] += floatval($order->getAdjustmentsTotalByType("shipping"));
+                $initialTemplateArray['inventory'] += floatval(CommerceReports::$plugin->inventoryService->totalProductWholesale($order->getLineItems()));
+                $initialTemplateArray['product'] += floatval($order->itemTotal - $order->getAdjustmentsTotalByType("tax"));
+                $initialTemplateArray['cogs'] += floatval(CommerceReports::$plugin->inventoryService->totalProductWholesale($order->getLineItems())) * -1;
+                $initialTemplateArray['pay'] += floatval($order->itemTotal + $order->getAdjustmentsTotalByType("shipping")) * -1;
+                $initialTemplateArray['tax'] += floatval($order->getAdjustmentsTotalByType("tax"));
+            } else {
                 $initialTemplateArray['shipping'] += floatval($order->getAdjustmentsTotalByType("shipping")) * -1;
                 // $initialTemplateArray['ar/pp'] += floatval($order->totalPaid);
                 $initialTemplateArray['inventory'] += floatval(CommerceReports::$plugin->inventoryService->totalProductWholesale($order->getLineItems())) * -1;
@@ -136,38 +174,45 @@ class BatchTransactionService extends Component
                 $initialTemplateArray['pay'] += floatval($order->itemTotal + $order->getAdjustmentsTotalByType("shipping"));
                 $initialTemplateArray['tax'] += floatval($order->getAdjustmentsTotalByType("tax")) * -1;
             }
-
-            $initialTemplateArray = array_map(
-                function($value){
-                    return number_format((float)$value, 2, '.', '');
-                }, $initialTemplateArray);
-
-            $fileContentsString = '';
-            $fileContentsString .= 'DIV=04 SEP=|\r\n';
-            $fileContentsString .= '1|CRAFT|'.$datesReport['end'].'|CRAFT|CRAFT IMPORT'."|\r\n";
-
-            foreach ($initialTemplateArray as $key => $value) {
-                $fileContentsString .= '4|'.$this->accountCodes[$key]['acct#'].'|'.$this->accountCodes[$key]['desc'].'||CRAFT||'.(string)$value."|\r\n";
-
-                fputcsv($fp, [
-                    '',
-                    $this->accountCodes[$key]['acct#'],
-                    $datesName['start'], $value > 0 ? 'D' : 'C',
-                    'Craft Journal',
-                    $this->accountCodes[$key]['desc'],
-                    (string)abs($value)
-                ]);
-
-            }
-
-            $file = file_put_contents($fileName.".txt", $fileContentsString.PHP_EOL , LOCK_EX);
-
-            fclose($fp);
-            array_push($files, $csvFileName);
         }
 
-        $zip = ReportFileHelper::generateZip($files, $request);
+        $initialTemplateArray = array_map(
+            function($value){
+                return number_format((float)$value, 2, '.', '');
+            }, $initialTemplateArray);
 
-        return $zip;
+        $fileContentsString = '';
+        $fileContentsString .= 'DIV=04 SEP=|\r\n';
+        $fileContentsString .= '1|CRAFT|'.$this->datesReport['end'].'|CRAFT|CRAFT IMPORT'."|\r\n";
+
+        foreach ($initialTemplateArray as $key => $rawvalue) {
+            $fileContentsString .= '4|'.$this->accountCodes[$key]['acct#'].'|'.$this->accountCodes[$key]['desc'].'||CRAFT||'.(string)$rawvalue."|\r\n";
+
+            $value = abs($rawvalue);
+            if ($refunds && $value > 0) {
+                $value = $value * -1;
+            }
+
+            fputcsv($fp, [
+                '',
+                $this->accountCodes[$key]['acct#'],
+                $this->datesName['start'], $rawvalue > 0 ? 'D' : 'C',
+                'Craft Journal',
+                $this->accountCodes[$key]['desc'],
+                (string)$value
+            ]);
+
+        }
+
+        $file = file_put_contents($fileName.".txt", $fileContentsString.PHP_EOL , LOCK_EX);
+
+        // if ($refunds) {
+        //     Craft::dd($fileContentsString);
+        // }
+
+        fclose($fp);
+        array_push($files, $csvFileName);
+
+        return $files;
     }
 }
