@@ -193,7 +193,7 @@ class BatchTransactionService extends Component
             fputcsv($fp, [
                 '',
                 $this->accountCodes[$key]['acct#'],
-                $this->datesName['start'], $rawvalue > 0 ? 'D' : 'C',
+                $this->datesName['start'], ($rawvalue > 0 || ($refunds && $rawvalue == 0)  ? 'D' : 'C'),
                 'Craft Journal',
                 $this->accountCodes[$key]['desc'],
                 (string)$value
