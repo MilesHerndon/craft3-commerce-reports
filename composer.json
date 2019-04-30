@@ -2,7 +2,7 @@
     "name": "milesherndon/commerce-reports",
     "description": "Plugin to create specific Commerce reports (client: ZTA)",
     "type": "craft-plugin",
-    "version": "1.1.6",
+    "version": "1.1.7",
     "keywords": [
         "craft",
         "cms",
