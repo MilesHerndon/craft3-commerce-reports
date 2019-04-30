@@ -158,13 +158,22 @@ class BatchTransactionService extends Component
         $initialTemplateArray = array_fill_keys($keys, 0);
 
         foreach ($orders as $order) {
-            $initialTemplateArray['shipping'] += floatval($order->getAdjustmentsTotalByType("shipping")) * -1;
-            // $initialTemplateArray['ar/pp'] += floatval($order->totalPaid);
-            $initialTemplateArray['inventory'] += floatval(CommerceReports::$plugin->inventoryService->totalProductWholesale($order->getLineItems())) * -1;
-            $initialTemplateArray['product'] += floatval($order->itemTotal - $order->getAdjustmentsTotalByType("tax")) * -1;
-            $initialTemplateArray['cogs'] += floatval(CommerceReports::$plugin->inventoryService->totalProductWholesale($order->getLineItems()));
-            $initialTemplateArray['pay'] += floatval($order->itemTotal + $order->getAdjustmentsTotalByType("shipping"));
-            $initialTemplateArray['tax'] += floatval($order->getAdjustmentsTotalByType("tax")) * -1;
+            if ($refunds) {
+                $initialTemplateArray['shipping'] += floatval($order->getAdjustmentsTotalByType("shipping"));
+                $initialTemplateArray['inventory'] += floatval(CommerceReports::$plugin->inventoryService->totalProductWholesale($order->getLineItems()));
+                $initialTemplateArray['product'] += floatval($order->itemTotal - $order->getAdjustmentsTotalByType("tax"));
+                $initialTemplateArray['cogs'] += floatval(CommerceReports::$plugin->inventoryService->totalProductWholesale($order->getLineItems())) * -1;
+                $initialTemplateArray['pay'] += floatval($order->itemTotal + $order->getAdjustmentsTotalByType("shipping")) * -1;
+                $initialTemplateArray['tax'] += floatval($order->getAdjustmentsTotalByType("tax"));
+            } else {
+                $initialTemplateArray['shipping'] += floatval($order->getAdjustmentsTotalByType("shipping")) * -1;
+                // $initialTemplateArray['ar/pp'] += floatval($order->totalPaid);
+                $initialTemplateArray['inventory'] += floatval(CommerceReports::$plugin->inventoryService->totalProductWholesale($order->getLineItems())) * -1;
+                $initialTemplateArray['product'] += floatval($order->itemTotal - $order->getAdjustmentsTotalByType("tax")) * -1;
+                $initialTemplateArray['cogs'] += floatval(CommerceReports::$plugin->inventoryService->totalProductWholesale($order->getLineItems()));
+                $initialTemplateArray['pay'] += floatval($order->itemTotal + $order->getAdjustmentsTotalByType("shipping"));
+                $initialTemplateArray['tax'] += floatval($order->getAdjustmentsTotalByType("tax")) * -1;
+            }
         }
 
         $initialTemplateArray = array_map(
