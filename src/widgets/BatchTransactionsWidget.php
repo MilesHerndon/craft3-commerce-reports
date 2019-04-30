@@ -47,7 +47,7 @@ class BatchTransactionsWidget extends Widget
      */
     public static function displayName(): string
     {
-        return Craft::t('commerce-reports', 'Commerce Reports - Batch Transations');
+        return Craft::t('commerce-reports', 'Commerce Reports - Batch Transactions');
     }
 
     /**
