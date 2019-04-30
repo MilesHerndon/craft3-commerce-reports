@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "563d3325018521ef546c779218b46bd7",
+    "content-hash": "a16f3dddb6177a842059263ac14044ec",
     "packages": [
         {
             "name": "cebe/markdown",
@@ -323,16 +323,16 @@
         },
         {
             "name": "craftcms/cms",
-            "version": "3.1.22",
+            "version": "3.1.24",
             "source": {
                 "type": "git",
                 "url": "https://github.com/craftcms/cms.git",
-                "reference": "868202831139e51b9d60d9738147ac9635bc760c"
+                "reference": "aa862bd7f2ee3a81c692f0b6c4d0aa9f20e85373"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/craftcms/cms/zipball/868202831139e51b9d60d9738147ac9635bc760c",
-                "reference": "868202831139e51b9d60d9738147ac9635bc760c",
+                "url": "https://api.github.com/repos/craftcms/cms/zipball/aa862bd7f2ee3a81c692f0b6c4d0aa9f20e85373",
+                "reference": "aa862bd7f2ee3a81c692f0b6c4d0aa9f20e85373",
                 "shasum": ""
             },
             "require": {
@@ -361,7 +361,7 @@
                 "seld/cli-prompt": "^1.0.3",
                 "symfony/yaml": "^3.2|^4.0",
                 "true/punycode": "^2.1.0",
-                "twig/twig": "^2.7.2",
+                "twig/twig": "~2.8.1",
                 "yii2tech/ar-softdelete": "^1.0.2",
                 "yiisoft/yii2": "~2.0.17.0",
                 "yiisoft/yii2-debug": "^2.0.10",
@@ -407,20 +407,20 @@
                 "craftcms",
                 "yii2"
             ],
-            "time": "2019-04-10T17:10:47+00:00"
+            "time": "2019-04-23T17:11:18+00:00"
         },
         {
             "name": "craftcms/commerce",
-            "version": "2.1.3.1",
+            "version": "2.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/craftcms/commerce.git",
-                "reference": "94a97b0245927e6f9c6f532ad827e80db83ee1bb"
+                "reference": "10026287664826c8a81f0d5bb61a11725e484fa6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/craftcms/commerce/zipball/94a97b0245927e6f9c6f532ad827e80db83ee1bb",
-                "reference": "94a97b0245927e6f9c6f532ad827e80db83ee1bb",
+                "url": "https://api.github.com/repos/craftcms/commerce/zipball/10026287664826c8a81f0d5bb61a11725e484fa6",
+                "reference": "10026287664826c8a81f0d5bb61a11725e484fa6",
                 "shasum": ""
             },
             "require": {
@@ -455,7 +455,7 @@
                 "craftcms",
                 "yii2"
             ],
-            "time": "2019-04-10T23:45:08+00:00"
+            "time": "2019-04-30T06:02:45+00:00"
         },
         {
             "name": "craftcms/oauth2-craftid",
@@ -2357,16 +2357,16 @@
         },
         {
             "name": "swiftmailer/swiftmailer",
-            "version": "v6.2.0",
+            "version": "v6.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/swiftmailer/swiftmailer.git",
-                "reference": "6fa3232ff9d3f8237c0fae4b7ff05e1baa4cd707"
+                "reference": "5397cd05b0a0f7937c47b0adcb4c60e5ab936b6a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/swiftmailer/swiftmailer/zipball/6fa3232ff9d3f8237c0fae4b7ff05e1baa4cd707",
-                "reference": "6fa3232ff9d3f8237c0fae4b7ff05e1baa4cd707",
+                "url": "https://api.github.com/repos/swiftmailer/swiftmailer/zipball/5397cd05b0a0f7937c47b0adcb4c60e5ab936b6a",
+                "reference": "5397cd05b0a0f7937c47b0adcb4c60e5ab936b6a",
                 "shasum": ""
             },
             "require": {
@@ -2415,20 +2415,20 @@
                 "mail",
                 "mailer"
             ],
-            "time": "2019-03-10T07:52:41+00:00"
+            "time": "2019-04-21T09:21:45+00:00"
         },
         {
             "name": "symfony/console",
-            "version": "v4.2.5",
+            "version": "v4.2.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "24206aff3efe6962593297e57ef697ebb220e384"
+                "reference": "e2840bb38bddad7a0feaf85931e38fdcffdb2f81"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/24206aff3efe6962593297e57ef697ebb220e384",
-                "reference": "24206aff3efe6962593297e57ef697ebb220e384",
+                "url": "https://api.github.com/repos/symfony/console/zipball/e2840bb38bddad7a0feaf85931e38fdcffdb2f81",
+                "reference": "e2840bb38bddad7a0feaf85931e38fdcffdb2f81",
                 "shasum": ""
             },
             "require": {
@@ -2487,7 +2487,7 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "https://symfony.com",
-            "time": "2019-04-01T07:32:59+00:00"
+            "time": "2019-04-08T14:23:48+00:00"
         },
         {
             "name": "symfony/contracts",
@@ -2559,7 +2559,7 @@
         },
         {
             "name": "symfony/filesystem",
-            "version": "v4.2.5",
+            "version": "v4.2.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/filesystem.git",
@@ -2609,16 +2609,16 @@
         },
         {
             "name": "symfony/finder",
-            "version": "v4.2.5",
+            "version": "v4.2.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/finder.git",
-                "reference": "267b7002c1b70ea80db0833c3afe05f0fbde580a"
+                "reference": "e45135658bd6c14b61850bf131c4f09a55133f69"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/finder/zipball/267b7002c1b70ea80db0833c3afe05f0fbde580a",
-                "reference": "267b7002c1b70ea80db0833c3afe05f0fbde580a",
+                "url": "https://api.github.com/repos/symfony/finder/zipball/e45135658bd6c14b61850bf131c4f09a55133f69",
+                "reference": "e45135658bd6c14b61850bf131c4f09a55133f69",
                 "shasum": ""
             },
             "require": {
@@ -2654,7 +2654,7 @@
             ],
             "description": "Symfony Finder Component",
             "homepage": "https://symfony.com",
-            "time": "2019-02-23T15:42:05+00:00"
+            "time": "2019-04-06T13:51:08+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
@@ -2951,16 +2951,16 @@
         },
         {
             "name": "symfony/process",
-            "version": "v4.2.5",
+            "version": "v4.2.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
-                "reference": "1e6cbb41dadcaf29e0db034d6ad0d039a9df06e6"
+                "reference": "8cf39fb4ccff793340c258ee7760fd40bfe745fe"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/1e6cbb41dadcaf29e0db034d6ad0d039a9df06e6",
-                "reference": "1e6cbb41dadcaf29e0db034d6ad0d039a9df06e6",
+                "url": "https://api.github.com/repos/symfony/process/zipball/8cf39fb4ccff793340c258ee7760fd40bfe745fe",
+                "reference": "8cf39fb4ccff793340c258ee7760fd40bfe745fe",
                 "shasum": ""
             },
             "require": {
@@ -2996,11 +2996,11 @@
             ],
             "description": "Symfony Process Component",
             "homepage": "https://symfony.com",
-            "time": "2019-03-10T20:07:02+00:00"
+            "time": "2019-04-10T16:20:36+00:00"
         },
         {
             "name": "symfony/yaml",
-            "version": "v4.2.5",
+            "version": "v4.2.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
@@ -3105,16 +3105,16 @@
         },
         {
             "name": "twig/twig",
-            "version": "v2.7.4",
+            "version": "v2.8.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "ed9c49220e09bfaeb1ba4d48077c08a7b09908dd"
+                "reference": "91cc2594d3143761ce0399c1caffd0b500ffe5b9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/ed9c49220e09bfaeb1ba4d48077c08a7b09908dd",
-                "reference": "ed9c49220e09bfaeb1ba4d48077c08a7b09908dd",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/91cc2594d3143761ce0399c1caffd0b500ffe5b9",
+                "reference": "91cc2594d3143761ce0399c1caffd0b500ffe5b9",
                 "shasum": ""
             },
             "require": {
@@ -3130,7 +3130,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.7-dev"
+                    "dev-master": "2.8-dev"
                 }
             },
             "autoload": {
@@ -3168,7 +3168,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2019-03-23T14:28:58+00:00"
+            "time": "2019-04-16T17:14:24+00:00"
         },
         {
             "name": "yii2tech/ar-softdelete",
@@ -3376,16 +3376,16 @@
         },
         {
             "name": "yiisoft/yii2-debug",
-            "version": "2.1.1",
+            "version": "2.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii2-debug.git",
-                "reference": "632929c0682c6470ec838cf15d14c22418e6d07f"
+                "reference": "ad90eeea4312daa5d02d9ca043743fca03571874"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii2-debug/zipball/632929c0682c6470ec838cf15d14c22418e6d07f",
-                "reference": "632929c0682c6470ec838cf15d14c22418e6d07f",
+                "url": "https://api.github.com/repos/yiisoft/yii2-debug/zipball/ad90eeea4312daa5d02d9ca043743fca03571874",
+                "reference": "ad90eeea4312daa5d02d9ca043743fca03571874",
                 "shasum": ""
             },
             "require": {
@@ -3429,7 +3429,7 @@
                 "debugger",
                 "yii2"
             ],
-            "time": "2019-03-30T20:33:53+00:00"
+            "time": "2019-04-23T13:17:21+00:00"
         },
         {
             "name": "yiisoft/yii2-queue",
