@@ -115,9 +115,9 @@ class BatchTransactionService extends Component
 
             $refundedOrders = Order::find()
                 ->isCompleted(true)
-                ->orderBy('dateOrdered asc')
+                ->orderBy('dateUpdated asc')
                 ->orderStatus('refunded')
-                ->dateOrdered(["and", ">= ".$this->dates['start'], "< ".$this->dates['end']])
+                ->dateUpdated(["and", ">= ".$this->dates['start'], "< ".$this->dates['end']])
                 ->all();
 
             if (!empty($refundedOrders)) {
