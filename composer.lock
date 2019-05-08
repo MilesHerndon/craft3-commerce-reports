@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a2bfdf7e06b6b6d45017512ad7e3145a",
+    "content-hash": "394d89da0c9950d7aead66deb5a6314a",
     "packages": [
         {
             "name": "cebe/markdown",
@@ -323,16 +323,16 @@
         },
         {
             "name": "craftcms/cms",
-            "version": "3.1.25",
+            "version": "3.1.26",
             "source": {
                 "type": "git",
                 "url": "https://github.com/craftcms/cms.git",
-                "reference": "d63676d829074e257492f010fdcd7ccc7fe895a9"
+                "reference": "64297dc7367bd6faf2ec8139096344f66b219bb1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/craftcms/cms/zipball/d63676d829074e257492f010fdcd7ccc7fe895a9",
-                "reference": "d63676d829074e257492f010fdcd7ccc7fe895a9",
+                "url": "https://api.github.com/repos/craftcms/cms/zipball/64297dc7367bd6faf2ec8139096344f66b219bb1",
+                "reference": "64297dc7367bd6faf2ec8139096344f66b219bb1",
                 "shasum": ""
             },
             "require": {
@@ -407,20 +407,20 @@
                 "craftcms",
                 "yii2"
             ],
-            "time": "2019-04-30T18:40:25+00:00"
+            "time": "2019-05-08T17:55:55+00:00"
         },
         {
             "name": "craftcms/commerce",
-            "version": "2.1.4",
+            "version": "2.1.5.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/craftcms/commerce.git",
-                "reference": "10026287664826c8a81f0d5bb61a11725e484fa6"
+                "reference": "a6a1c5d01008f978f0ea382b81cd5f5d2f2d1a58"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/craftcms/commerce/zipball/10026287664826c8a81f0d5bb61a11725e484fa6",
-                "reference": "10026287664826c8a81f0d5bb61a11725e484fa6",
+                "url": "https://api.github.com/repos/craftcms/commerce/zipball/a6a1c5d01008f978f0ea382b81cd5f5d2f2d1a58",
+                "reference": "a6a1c5d01008f978f0ea382b81cd5f5d2f2d1a58",
                 "shasum": ""
             },
             "require": {
@@ -455,7 +455,7 @@
                 "craftcms",
                 "yii2"
             ],
-            "time": "2019-04-30T06:02:45+00:00"
+            "time": "2019-05-08T10:52:43+00:00"
         },
         {
             "name": "craftcms/oauth2-craftid",
@@ -2419,7 +2419,7 @@
         },
         {
             "name": "symfony/console",
-            "version": "v4.2.7",
+            "version": "v4.2.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
@@ -2559,7 +2559,7 @@
         },
         {
             "name": "symfony/filesystem",
-            "version": "v4.2.7",
+            "version": "v4.2.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/filesystem.git",
@@ -2609,7 +2609,7 @@
         },
         {
             "name": "symfony/finder",
-            "version": "v4.2.7",
+            "version": "v4.2.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/finder.git",
@@ -2951,7 +2951,7 @@
         },
         {
             "name": "symfony/process",
-            "version": "v4.2.7",
+            "version": "v4.2.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
@@ -3000,7 +3000,7 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v4.2.7",
+            "version": "v4.2.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
