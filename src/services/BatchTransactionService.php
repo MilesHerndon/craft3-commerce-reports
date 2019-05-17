@@ -89,6 +89,9 @@ class BatchTransactionService extends Component
         $orderSpreadsheet = CommerceReports::$plugin->orderService->getOrdersWithDetails($request, $tempPath);
         array_push($files, $orderSpreadsheet);
 
+        $refundsSpreadsheet = CommerceReports::$plugin->orderService->getOrdersWithDetails($request, $tempPath, true);
+        array_push($files, $refundsSpreadsheet);
+
         for ($dateCounter = $startDateInSeconds; $dateCounter < $endDateInSeconds; $dateCounter += $incrementer) {
             $params = [
                 0 => [

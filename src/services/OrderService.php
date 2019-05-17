@@ -89,7 +89,7 @@ class OrderService extends Component
      * @param $request
      * @return craft\commerce\elements\Order
      */
-    public function getOrdersByDate($request)
+    public function getOrdersByDate($request, $refunds=false)
     {
         if (empty($request)) {
             return false;
@@ -97,23 +97,35 @@ class OrderService extends Component
 
         $dates = ReportDateTimeHelper::formatTimes($request, 'c', true);
 
-        return Order::find()
-            ->isCompleted(true)
-            ->orderBy('dateOrdered asc')
-            ->dateOrdered(["and", ">=".$dates['start'], "<".$dates['end']])
-            ->all();
+        $query = Order::find()
+            ->isCompleted(true);
+
+        if ($refunds) {
+            $query->orderBy('dateUpdated asc')
+                ->orderStatus('refunded')
+                ->dateUpdated(["and", ">=".$dates['start'], "<".$dates['end']]);
+        } else {
+            $query->orderBy('dateOrdered asc')
+                ->dateOrdered(["and", ">=".$dates['start'], "<".$dates['end']]);
+        }
+
+        return $query->all();
     }
 
     // // NOTE: Part of batchTransations
-    public function getOrdersWithDetails($request, $filepath)
+    public function getOrdersWithDetails($request, $filepath, $refunds=false)
     {
         if (empty($request)) {
             return false;
         }
 
-        $orders = $this->getOrdersByDate($request);
+        $orders = $this->getOrdersByDate($request, $refunds);
 
-        $fileName = $filepath . '/' . uniqid() . '.csv';
+        if ($refunds) {
+            $fileName = $filepath . '/all_refunded_orders.csv';
+        } else {
+            $fileName = $filepath . '/all_orders.csv';
+        }
 
         $fp = fopen($fileName, 'w');
 
@@ -124,9 +136,10 @@ class OrderService extends Component
             'Tax total',
             'Shipping total',
             'Wholesale total',
-            'total paid',
-            'date ordered',
-            'date paid'
+            'Total paid',
+            'Date ordered',
+            'Date paid',
+            'Date refunded'
         ]);
 
         foreach ($orders as $order) {
@@ -137,9 +150,10 @@ class OrderService extends Component
                 'Tax total' => number_format((float)$order->getAdjustmentsTotalByType("tax"), 2, '.', ''),
                 'Shipping total' => number_format((float)$order->getAdjustmentsTotalByType("shipping"), 2, '.', ''),
                 'Wholesale total' => floatval(CommerceReports::$plugin->inventoryService->totalProductWholesale($order->getLineItems())),
-                'total paid' => number_format(floatval($order->getItemTotal() + $order->getAdjustmentsTotalByType("shipping")), 2, '.', ''),
-                'date ordered' => $order->dateOrdered->format('n/d/Y'),
-                'date paid' => $order->datePaid->format('n/d/Y'),
+                'Total paid' => number_format(floatval($order->getItemTotal() + $order->getAdjustmentsTotalByType("shipping")), 2, '.', ''),
+                'Date ordered' => $order->dateOrdered->format('n/d/Y'),
+                'Date paid' => $order->datePaid->format('n/d/Y'),
+                'Date refunded' => $order->getOrderStatus() == "Refunded" ? $order->dateUpdated->format('n/d/Y') : "",
             ];
 
             fputcsv($fp, $row);
