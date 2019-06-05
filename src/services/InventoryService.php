@@ -267,9 +267,12 @@ class InventoryService extends Component
                     $productId = $lineItem->snapshot['purchasableId'];
                     $product = Variant::find()->id($productId)->one();
                 }
-
-                $totalWholesale += ($product['productWholesalePrice'] * $qty);
+            } else {
+                $productId = Variant::find()->id($lineItem->snapshot['purchasableId'])->one();
+                $product = Product::find()->id($productId)->status(null)->one();
             }
+
+            $totalWholesale += ($product['productWholesalePrice'] * $qty);
         }
 
         return $totalWholesale;
