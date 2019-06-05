@@ -263,11 +263,13 @@ class InventoryService extends Component
 
                 $product = Product::find()->id($productId)->status(null)->one();
 
+                // Unique images for all variants
                 if (!is_numeric($product['productWholesalePrice'])) {
                     $productId = $lineItem->snapshot['purchasableId'];
                     $product = Variant::find()->id($productId)->one();
                 }
             } else {
+                // Global Images across variants
                 $productId = Variant::find()->id($lineItem->snapshot['purchasableId'])->one();
                 $product = Product::find()->id($productId)->status(null)->one();
             }
