@@ -151,8 +151,8 @@ class OrderService extends Component
                 'Shipping total' => number_format((float)$order->getAdjustmentsTotalByType("shipping"), 2, '.', ''),
                 'Wholesale total' => floatval(CommerceReports::$plugin->inventoryService->totalProductWholesale($order->getLineItems())),
                 'Total paid' => number_format(floatval($order->getItemTotal() + $order->getAdjustmentsTotalByType("shipping")), 2, '.', ''),
-                'Date ordered' => $order->dateOrdered->format('n/d/Y'),
-                'Date paid' => $order->datePaid->format('n/d/Y'),
+                'Date ordered' => !empty($order->dateOrdered) ? $order->dateOrdered->format('n/d/Y') : '',
+                'Date paid' => !empty($order->datePaid) ? $order->datePaid->format('n/d/Y') : '',
                 'Date refunded' => $order->getOrderStatus() == "Refunded" ? $order->dateUpdated->format('n/d/Y') : "",
             ];
 
