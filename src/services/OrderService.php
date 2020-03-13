@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Commerce Reports plugin for Craft CMS 3.x
  *
@@ -27,139 +28,139 @@ use craft\commerce\elements\Variant;
  */
 class OrderService extends Component
 {
-    // Public Methods
-    // =========================================================================
+  // Public Methods
+  // =========================================================================
 
-    /**
-     * Get orders by customer
-     *
-     * @param $request
-     * @return string
-     */
-    public function getOrdersByCustomer($request)
-    {
-        $customerEmailPreformatted = $request['customer'];
-        $customerEmail = str_replace('\@', '@', $customerEmailPreformatted);
+  /**
+   * Get orders by customer
+   *
+   * @param $request
+   * @return string
+   */
+  public function getOrdersByCustomer($request)
+  {
+    $customerEmailPreformatted = $request['customer'];
+    $customerEmail = str_replace('\@', '@', $customerEmailPreformatted);
 
-        $orders = $this->getOrdersByDate($request);
+    $orders = $this->getOrdersByDate($request);
 
-        $customerOrders = [];
+    $customerOrders = [];
 
-        foreach ($orders as $order) {
-            if ($order->email == $customerEmail) {
-                array_push($customerOrders, $order);
-            }
-        }
-
-        $nameTemplate = $customerEmail;
-        $filePath = ReportFileHelper::getStoragePath('commerce-reports-customer');
-        $csvFileName = 'customer_'.$nameTemplate.'.csv';
-        $fileName = $filePath . '/' . $csvFileName;
-
-        $fp = fopen($fileName, 'w');
-
-        fputcsv($fp, [
-            'Order #',
-            'Date Ordered',
-            'Customer',
-            'Purchase Total',
-            'Status'
-        ]);
-
-        foreach ($customerOrders as $order) {
-            $address = $order->shippingAddress;
-            $row = [
-                'Order #' => (string)$order->shortNumber,
-                'Date Ordered' => $order->dateOrdered->format('Y-m-d'),
-                'Customer' => $address->firstName . ' ' . $address->lastName,
-                'Purchase Total' => $order->itemSubtotal,
-                'Status' => $order->status,
-            ];
-
-            fputcsv($fp, $row);
-        }
-        fclose($fp);
-
-        return $fileName;
+    foreach ($orders as $order) {
+      if ($order->email == $customerEmail) {
+        array_push($customerOrders, $order);
+      }
     }
 
-    /**
-     * Gets orders between a specified date
-     *
-     * @param $request
-     * @return craft\commerce\elements\Order
-     */
-    public function getOrdersByDate($request, $refunds=false)
-    {
-        if (empty($request)) {
-            return false;
-        }
+    $nameTemplate = $customerEmail;
+    $filePath = ReportFileHelper::getStoragePath('commerce-reports-customer');
+    $csvFileName = 'customer_' . $nameTemplate . '.csv';
+    $fileName = $filePath . '/' . $csvFileName;
 
-        $dates = ReportDateTimeHelper::formatTimes($request, 'c', true);
+    $fp = fopen($fileName, 'w');
 
-        $query = Order::find()
-            ->isCompleted(true);
+    fputcsv($fp, [
+      'Order #',
+      'Date Ordered',
+      'Customer',
+      'Purchase Total',
+      'Status'
+    ]);
 
-        if ($refunds) {
-            $query->orderBy('dateUpdated asc')
-                ->orderStatus('refunded')
-                ->dateUpdated(["and", ">=".$dates['start'], "<".$dates['end']]);
-        } else {
-            $query->orderBy('dateOrdered asc')
-                ->dateOrdered(["and", ">=".$dates['start'], "<".$dates['end']]);
-        }
+    foreach ($customerOrders as $order) {
+      $address = $order->shippingAddress;
+      $row = [
+        'Order #' => (string) $order->shortNumber,
+        'Date Ordered' => $order->dateOrdered->format('Y-m-d'),
+        'Customer' => $address->firstName . ' ' . $address->lastName,
+        'Purchase Total' => $order->itemSubtotal,
+        'Status' => $order->status,
+      ];
 
-        return $query->all();
+      fputcsv($fp, $row);
+    }
+    fclose($fp);
+
+    return $fileName;
+  }
+
+  /**
+   * Gets orders between a specified date
+   *
+   * @param $request
+   * @return craft\commerce\elements\Order
+   */
+  public function getOrdersByDate($request, $refunds = false)
+  {
+    if (empty($request)) {
+      return false;
     }
 
-    // // NOTE: Part of batchTransations
-    public function getOrdersWithDetails($request, $filepath, $refunds=false)
-    {
-        if (empty($request)) {
-            return false;
-        }
+    $dates = ReportDateTimeHelper::formatTimes($request, 'c', true);
 
-        $orders = $this->getOrdersByDate($request, $refunds);
+    $query = Order::find()
+      ->isCompleted(true);
 
-        if ($refunds) {
-            $fileName = $filepath . '/all_refunded_orders.csv';
-        } else {
-            $fileName = $filepath . '/all_orders.csv';
-        }
-
-        $fp = fopen($fileName, 'w');
-
-        fputcsv($fp, [
-            'Order number',
-            'Status',
-            'Product total',
-            'Tax total',
-            'Shipping total',
-            'Wholesale total',
-            'Total paid',
-            'Date ordered',
-            'Date paid',
-            'Date refunded'
-        ]);
-
-        foreach ($orders as $order) {
-            $row = [
-                'Order number' => (string)$order->getShortNumber(),
-                'Status' => $order->getOrderStatus(),
-                'Product total' => number_format(floatval($order->getItemTotal() - $order->getAdjustmentsTotalByType("tax")), 2, '.', ''),
-                'Tax total' => number_format((float)$order->getAdjustmentsTotalByType("tax"), 2, '.', ''),
-                'Shipping total' => number_format((float)$order->getAdjustmentsTotalByType("shipping"), 2, '.', ''),
-                'Wholesale total' => floatval(CommerceReports::$plugin->inventoryService->totalProductWholesale($order->getLineItems())),
-                'Total paid' => number_format(floatval($order->getItemTotal() + $order->getAdjustmentsTotalByType("shipping")), 2, '.', ''),
-                'Date ordered' => !empty($order->dateOrdered) ? $order->dateOrdered->format('n/d/Y') : '',
-                'Date paid' => !empty($order->datePaid) ? $order->datePaid->format('n/d/Y') : '',
-                'Date refunded' => $order->getOrderStatus() == "Refunded" ? $order->dateUpdated->format('n/d/Y') : "",
-            ];
-
-            fputcsv($fp, $row);
-        }
-        fclose($fp);
-
-        return $fileName;
+    if ($refunds) {
+      $query->orderBy('dateUpdated asc')
+        ->orderStatus('refunded')
+        ->dateUpdated(["and", ">=" . $dates['start'], "<" . $dates['end']]);
+    } else {
+      $query->orderBy('dateOrdered asc')
+        ->dateOrdered(["and", ">=" . $dates['start'], "<" . $dates['end']]);
     }
+
+    return $query->all();
+  }
+
+  // // NOTE: Part of batchTransations
+  public function getOrdersWithDetails($request, $filepath, $refunds = false)
+  {
+    if (empty($request)) {
+      return false;
+    }
+
+    $orders = $this->getOrdersByDate($request, $refunds);
+
+    if ($refunds) {
+      $fileName = $filepath . '/all_refunded_orders.csv';
+    } else {
+      $fileName = $filepath . '/all_orders.csv';
+    }
+
+    $fp = fopen($fileName, 'w');
+
+    fputcsv($fp, [
+      'Order number',
+      'Status',
+      'Product total',
+      'Tax total',
+      'Shipping total',
+      'Wholesale total',
+      'Total paid',
+      'Date ordered',
+      'Date paid',
+      'Date refunded'
+    ]);
+
+    foreach ($orders as $order) {
+      $row = [
+        'Order number' => (string) $order->getShortNumber(),
+        'Status' => $order->getOrderStatus(),
+        'Product total' => number_format(floatval($order->getItemTotal() - $order->getTotalTax()), 2, '.', ''),
+        'Tax total' => number_format((float) $order->getTotalTax(), 2, '.', ''),
+        'Shipping total' => number_format((float) $order->getTotalShippingCost(), 2, '.', ''),
+        'Wholesale total' => floatval(CommerceReports::$plugin->inventoryService->totalProductWholesale($order->getLineItems())),
+        'Total paid' => number_format(floatval($order->getItemTotal() + $order->getTotalShippingCost()), 2, '.', ''),
+        'Date ordered' => !empty($order->dateOrdered) ? $order->dateOrdered->format('n/d/Y') : '',
+        'Date paid' => !empty($order->datePaid) ? $order->datePaid->format('n/d/Y') : '',
+        'Date refunded' => $order->getOrderStatus() == "Refunded" ? $order->dateUpdated->format('n/d/Y') : "",
+      ];
+
+      fputcsv($fp, $row);
+    }
+    fclose($fp);
+
+    return $fileName;
+  }
 }

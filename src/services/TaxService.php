@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Commerce Reports plugin for Craft CMS 3.x
  *
@@ -26,61 +27,61 @@ use craft\commerce\elements\Product;
  */
 class TaxService extends Component
 {
-    // Public Methods
-    // =========================================================================
+  // Public Methods
+  // =========================================================================
 
-    /**
-     * Gets indiana sales tax items
-     *
-     * @param $request
-     * @return string
-     */
-    public function getIndianaSalestax($request)
-    {
-        // $dates = ReportDateTimeHelper::formatTimes($request, 'Y-m-d H:i');
+  /**
+   * Gets indiana sales tax items
+   *
+   * @param $request
+   * @return string
+   */
+  public function getIndianaSalestax($request)
+  {
+    // $dates = ReportDateTimeHelper::formatTimes($request, 'Y-m-d H:i');
 
-        $orders = CommerceReports::$plugin->orderService->getOrdersByDate($request);
+    $orders = CommerceReports::$plugin->orderService->getOrdersByDate($request);
 
-        $ordersWithTax = [];
-        foreach ($orders as $order) {
-            if ($order->getAdjustmentsTotalByType("tax") > 0) {
-                array_push($ordersWithTax, $order);
-            }
-        }
-
-        $endDateString = ReportDateTimeHelper::formatTimes($request, 'Ymd')['end'];
-        $rawStartDate = $request['startDate'];
-        $startDate = new \DateTime($rawStartDate);
-        $startDateString = $startDate->format('Ymd');
-
-        $nameTemplate = $startDateString . '_' . $endDateString;
-        $filePath = ReportFileHelper::getStoragePath('commerce-reports-sales-tax');
-        $csvFileName = 'sales-tax_' . $nameTemplate.'.csv';
-        $fileName = $filePath . '/' . $csvFileName;
-
-        $fp = fopen($fileName, 'w');
-
-        fputcsv($fp, [
-            'Order #',
-            'Customer',
-            'Date Ordered',
-            'Taxable Amount'
-        ]);
-
-        foreach ($ordersWithTax as $order) {
-            $address = $order->shippingAddress;
-            $row = [
-                'Order #' => (string)$order->shortNumber,
-                'Customer' => $address->firstName . ' ' . $address->lastName,
-                'Date Ordered' => $order->dateOrdered->format('Y-m-d'),
-                'Taxable Amount' => $order->itemSubtotal,
-            ];
-
-            fputcsv($fp, $row);
-        }
-
-        fclose($fp);
-
-        return $fileName;
+    $ordersWithTax = [];
+    foreach ($orders as $order) {
+      if ($order->getTotalTax() > 0) {
+        array_push($ordersWithTax, $order);
+      }
     }
+
+    $endDateString = ReportDateTimeHelper::formatTimes($request, 'Ymd')['end'];
+    $rawStartDate = $request['startDate'];
+    $startDate = new \DateTime($rawStartDate);
+    $startDateString = $startDate->format('Ymd');
+
+    $nameTemplate = $startDateString . '_' . $endDateString;
+    $filePath = ReportFileHelper::getStoragePath('commerce-reports-sales-tax');
+    $csvFileName = 'sales-tax_' . $nameTemplate . '.csv';
+    $fileName = $filePath . '/' . $csvFileName;
+
+    $fp = fopen($fileName, 'w');
+
+    fputcsv($fp, [
+      'Order #',
+      'Customer',
+      'Date Ordered',
+      'Taxable Amount'
+    ]);
+
+    foreach ($ordersWithTax as $order) {
+      $address = $order->shippingAddress;
+      $row = [
+        'Order #' => (string) $order->shortNumber,
+        'Customer' => $address->firstName . ' ' . $address->lastName,
+        'Date Ordered' => $order->dateOrdered->format('Y-m-d'),
+        'Taxable Amount' => $order->itemSubtotal,
+      ];
+
+      fputcsv($fp, $row);
+    }
+
+    fclose($fp);
+
+    return $fileName;
+  }
 }
